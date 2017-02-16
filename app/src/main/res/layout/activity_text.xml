@@ -10,13 +10,6 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.crystal_ar.crystalcompsdemo.TextActivity">
 
-    <Button
-        android:id="@+id/BtnTakePhoto"
-        android:text="Take Photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
     <ImageView
         android:id="@+id/textImageView"
         android:layout_width="match_parent"
@@ -54,5 +47,19 @@
         android:id="@+id/checkBox2"
         android:layout_alignLeft="@+id/checkBox3"
         android:layout_alignStart="@+id/checkBox3" android:layout_above="@+id/BtnPlaceObjs"/>
+    <Button
+        android:text="Load Photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/BtnLoadPhoto"
+        android:layout_alignParentBottom="true" android:layout_alignRight="@+id/checkBox"
+        android:layout_alignEnd="@+id/checkBox"/>
+    <Button
+        android:id="@+id/BtnTakePhoto"
+        android:text="Take Photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/BtnLoadPhoto"
+        android:layout_toStartOf="@+id/BtnLoadPhoto"/>
 
 </RelativeLayout>

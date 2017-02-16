@@ -25,6 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.rmtheis:tess-two:5.4.1'
     compile project(':crystal-ar')
     testCompile 'junit:junit:4.12'
 }
