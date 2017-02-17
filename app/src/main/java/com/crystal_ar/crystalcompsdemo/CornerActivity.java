@@ -32,7 +32,6 @@ public class CornerActivity extends AppCompatActivity {
         this.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("CLICK", "CLICK");
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     // logs the x,y coordinates in the monitor.
                     Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
