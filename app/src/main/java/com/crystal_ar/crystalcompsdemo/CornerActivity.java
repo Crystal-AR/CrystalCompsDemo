@@ -1,6 +1,5 @@
 package com.crystal_ar.crystalcompsdemo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,8 +17,7 @@ import com.crystal_ar.crystal_ar.CrystalAR;
 public class CornerActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private CrystalAR crystalAR;
-    private LinearLayout linearLayout;
+    private CrystalAR crystalAR;c
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
