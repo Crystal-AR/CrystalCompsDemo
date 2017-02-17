@@ -35,6 +35,10 @@ public class OBJRenderer extends RajawaliRenderer {
         directionalLight.setPower(2);
         getCurrentScene().addLight(directionalLight);
 
+        renderModel(R.raw.multiobjects_obj);
+    }
+
+    public void renderModel(Integer model) {
         Material material = new Material();
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
@@ -42,7 +46,7 @@ public class OBJRenderer extends RajawaliRenderer {
         getCurrentCamera().setZ(15f);
 
         LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager,
-                R.raw.multiobjects_obj);
+                model);
         try {
             parser.parse();
         } catch (ParsingException e) {
@@ -56,7 +60,9 @@ public class OBJRenderer extends RajawaliRenderer {
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
-        multiobj.rotate(Vector3.Axis.Y, 1.0);
+        if (multiobj != null) {
+            multiobj.rotate(Vector3.Axis.Y, 1.0);
+        }
     }
 
     public void onTouchEvent(MotionEvent event){

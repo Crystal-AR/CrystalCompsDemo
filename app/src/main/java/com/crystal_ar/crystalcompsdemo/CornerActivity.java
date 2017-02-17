@@ -32,22 +32,27 @@ public class CornerActivity extends AppCompatActivity {
         this.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     // logs the x,y coordinates in the monitor.
                     Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
+                    // Display list view here --> model is selected in the list view.
+                    if (objRenderer != null) {
+                        objRenderer.renderModel(R.raw.multiobjects_obj);
+                    }
                 }
                 return true;
             }
         });
 
-        // Setting up the RajawaliSurfaceView
-//        final RajawaliSurfaceView surface = new RajawaliSurfaceView(this);
-//        surface.setFrameRate(60.0);
-//        surface.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
-//
-//        addContentView(surface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//        objRenderer = new OBJRenderer(this);
-//        surface.setSurfaceRenderer(objRenderer);
+        // Setting up the RajawaliSurfaceView and objRenderer
+        final RajawaliSurfaceView surface = new RajawaliSurfaceView(this);
+        surface.setFrameRate(60.0);
+        surface.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
+
+        addContentView(surface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+
+        objRenderer = new OBJRenderer(this);
+        surface.setSurfaceRenderer(objRenderer);
+//        objRenderer.renderModel(R.raw.multiobjects_obj);
     }
 }
