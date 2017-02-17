@@ -17,7 +17,7 @@ import com.crystal_ar.crystal_ar.CrystalAR;
 public class CornerActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private CrystalAR crystalAR;c
+    private CrystalAR crystalAR;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
