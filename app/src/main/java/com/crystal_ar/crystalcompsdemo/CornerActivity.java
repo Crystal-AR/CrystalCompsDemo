@@ -17,6 +17,6 @@ public class CornerActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_text);
+        setContentView(R.layout.activity_corner);
     }
 }
