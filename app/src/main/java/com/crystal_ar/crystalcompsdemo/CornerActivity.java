@@ -18,7 +18,7 @@ import org.rajawali3d.surface.RajawaliSurfaceView;
  * Created by Frederik on 2/16/17.
  */
 
-public class CornerActivity extends AppCompatActivity implements View.OnTouchListener {
+public class CornerActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private CrystalAR crystalAR;
@@ -29,18 +29,17 @@ public class CornerActivity extends AppCompatActivity implements View.OnTouchLis
         setContentView(R.layout.activity_corner);
 
         this.imageView = (ImageView) findViewById(R.id.cornerImageView);
-        this.imageView.setOnTouchListener(this);
-//        this.imageView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.d("CLICK", "CLICK");
-//                if (event.getAction() == MotionEvent.ACTION_DOWN){
-//                    // logs the x,y coordinates in the monitor.
-//                    Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
-//                }
-//                return true;
-//            }
-//        });
+        this.imageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("CLICK", "CLICK");
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    // logs the x,y coordinates in the monitor.
+                    Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
+                }
+                return true;
+            }
+        });
 
         // Setting up the RajawaliSurfaceView
 //        final RajawaliSurfaceView surface = new RajawaliSurfaceView(this);
@@ -51,15 +50,5 @@ public class CornerActivity extends AppCompatActivity implements View.OnTouchLis
 //
 //        objRenderer = new OBJRenderer(this);
 //        surface.setSurfaceRenderer(objRenderer);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Log.d("CLICK", "CLICK");
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
-            // logs the x,y coordinates in the monitor.
-            Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
-        }
-        return true;
     }
 }
