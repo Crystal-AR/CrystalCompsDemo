@@ -45,7 +45,7 @@ public class CornerActivity extends AppCompatActivity {
     };
 
     String[] objModelNameList = new String[]{
-            "multiobjects",
+            "multi objects",
             "model1",
             "model2",
             "model3",
@@ -101,7 +101,7 @@ public class CornerActivity extends AppCompatActivity {
                 // Getting the Container Layout of the ListView
                 Log.d("LIST CLICK", objModelNameList[position]);
 
-                String modelStr = objModelNameList[position] + "_obj";
+                String modelStr = objModelFileList[position];
                 int model = context.getResources().getIdentifier(modelStr, "raw", context.getPackageName());
                 // this is where we would use clickX and clickY.
                 objRenderer.renderModel(model, 1.0, 1.0, 1.0);
