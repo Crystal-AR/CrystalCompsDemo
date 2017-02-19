@@ -61,15 +61,7 @@ public class CornerActivity extends AppCompatActivity {
         this.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // What do we want?
-                // on first click --> show list that the user can choose from.
-                // when user chooses a model, display it at the click location.
-                // do we want users to be able to drag the object around or adjust the size?
-                // make it so that the background picture is visible.
-
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    // logs the x,y coordinates in the monitor.
-                    Log.d("COORDINATE", String.valueOf(event.getX()) + "x" + String.valueOf(event.getY()));
                     clickX = event.getX();
                     clickY = event.getY();
                     objListView.setVisibility(View.VISIBLE);
@@ -90,7 +82,7 @@ public class CornerActivity extends AppCompatActivity {
     }
 
     private void creatListView() {
-        objListView = (ListView) findViewById(R.id.objModelsList);
+        objListView = (ListView) findViewById(R.id.objModelList);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, objModelNameList);
         objListView.setAdapter(adapter);
 
@@ -98,9 +90,7 @@ public class CornerActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View container, int position, long id) {
-                // Getting the Container Layout of the ListView
-                Log.d("LIST CLICK", objModelNameList[position]);
-
+                // Get the model from the resource folder and render it.
                 String modelStr = objModelFileList[position];
                 int model = context.getResources().getIdentifier(modelStr, "raw", context.getPackageName());
                 // this is where we would use clickX and clickY.
