@@ -81,12 +81,8 @@ public class ModelRenderer extends RajawaliRenderer {
         } else {
             Log.d("DEBUG", "UNSUPPORTED FILE TYPE ERROR");
         }
+        
         model.setMaterial(material);
-
-        if (texture == null) {
-            model.setColor(0xffffffff);
-        }
-
         getCurrentScene().addChild(model);
     }
 
