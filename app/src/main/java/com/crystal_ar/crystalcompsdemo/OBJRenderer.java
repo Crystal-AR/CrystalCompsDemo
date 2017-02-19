@@ -36,10 +36,7 @@ public class OBJRenderer extends RajawaliRenderer {
         directionalLight = new DirectionalLight(1f, .2f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
-        getCurrentScene().addLight(directionalLight);
         getCurrentCamera().setZ(15f);
-
-//        renderModel();
     }
 
     public void renderModel(Integer model, Double x, Double y, Double z) {
@@ -52,13 +49,14 @@ public class OBJRenderer extends RajawaliRenderer {
             getCurrentScene().removeChild(obj);
         }
 
+        getCurrentScene().addLight(directionalLight);
+
         Material material = new Material();
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
 
         if (texture != null) {
-//          Texture objTexture = new Texture("objTexture", R.drawable.earthtruecolor_nasa_big);
             Texture objTexture = new Texture("objTexture", texture);
             try {
                 material.addTexture(objTexture);
@@ -70,9 +68,6 @@ public class OBJRenderer extends RajawaliRenderer {
         if (!isOBJ) {
             LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager,
                 model);
-//            BaseObject3D obj = awdParser.getParsedObject();
-//            // Configure the object as needed
-//            addChild(obj);
             try {
                 parser.parse();
             } catch (ParsingException e) {
