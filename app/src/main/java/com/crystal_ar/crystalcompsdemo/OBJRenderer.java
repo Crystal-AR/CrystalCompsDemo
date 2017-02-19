@@ -44,11 +44,9 @@ public class OBJRenderer extends RajawaliRenderer {
     }
 
     public void renderModel(Integer model, Double x, Double y, Double z, Integer texture, boolean isOBJ) {
-        // If a model already exists, remove it from the scene.
-        if (obj != null) {
-            getCurrentScene().removeChild(obj);
-        }
-
+        // Clear lights and models.
+        getCurrentScene().clearChildren();
+        getCurrentScene().clearLights();
         getCurrentScene().addLight(directionalLight);
 
         Material material = new Material();
