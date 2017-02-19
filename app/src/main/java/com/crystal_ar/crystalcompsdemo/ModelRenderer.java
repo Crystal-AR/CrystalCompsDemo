@@ -6,7 +6,6 @@ import android.view.MotionEvent;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
-import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.LoaderAWD;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
@@ -24,7 +23,7 @@ import org.rajawali3d.renderer.RajawaliRenderer;
 public class ModelRenderer extends RajawaliRenderer {
 
     private DirectionalLight directionalLight;
-    private Object3D obj;
+    private Object3D model;
 
     public ModelRenderer(Context context) {
         super(context);
@@ -38,7 +37,7 @@ public class ModelRenderer extends RajawaliRenderer {
         getCurrentCamera().setZ(15f);
     }
 
-    public void renderModel(Integer model, Integer texture, String type) {
+    public void renderModel(Integer modelID, Integer texture, String type) {
         // Clear lights and models.
         getCurrentScene().clearChildren();
         getCurrentScene().clearLights();
@@ -50,7 +49,7 @@ public class ModelRenderer extends RajawaliRenderer {
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
 
-        // Only add texture if given.
+        // Only add texture if the model has one.
         if (texture != null) {
             Texture objTexture = new Texture("objTexture", texture);
             try {
@@ -62,44 +61,49 @@ public class ModelRenderer extends RajawaliRenderer {
 
         if (type.equals("obj")) {
             // OBJ loader/parser.
-            LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager, model);
+            LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager, modelID);
 
             try {
                 parser.parse();
             } catch (ParsingException e) {
                 e.printStackTrace();
             }
-            obj = parser.getParsedObject();
+            model = parser.getParsedObject();
         } else if (type.equals("awd")) {
             // AWD loader/parser.
-            LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager, model);
+            LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager, modelID);
             try {
                 parser.parse();
             } catch (ParsingException e) {
                 e.printStackTrace();
             }
-            obj = parser.getParsedObject();
+            model = parser.getParsedObject();
         } else {
-            Log.d("DEBUG", "UNSUPPORTED FILE TYPE");
+            Log.d("DEBUG", "UNSUPPORTED FILE TYPE ERROR");
         }
-        obj.setMaterial(material);
-        getCurrentScene().addChild(obj);
+        model.setMaterial(material);
+
+        if (texture == null) {
+            model.setColor(0xffffffff);
+        }
+
+        getCurrentScene().addChild(model);
     }
 
     public void setPosition(Double x, Double y, Double z) {
         // These are coordinates for the virtual world.
-        obj.setPosition(x, y, z);
+        model.setPosition(x, y, z);
 
 //        // These are coordinates for the "real" world.
-//        obj.setScreenCoordinates(1.0, 1.0, getViewportWidth(), getViewportHeight(), 1.0);
+//        model.setScreenCoordinates(1.0, 1.0, getViewportWidth(), getViewportHeight(), 1.0);
     }
 
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
         // Rotate object.
-        if (obj != null) {
-            obj.rotate(Vector3.Axis.Y, 1.0);
+        if (model != null) {
+            model.rotate(Vector3.Axis.Y, 1.0);
         }
     }
 

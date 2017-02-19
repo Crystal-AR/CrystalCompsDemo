@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +17,20 @@ import com.crystal_ar.crystal_ar.CrystalAR;
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Frederik on 2/16/17.
  */
 
 public class CornerActivity extends AppCompatActivity {
 
-    private ImageView imageView;
-    private CrystalAR crystalAR;
-    private ModelRenderer objRenderer;
-    private RajawaliSurfaceView rajSurface;
-    private ListView objListView;
+    private Context context = this;
     private Float clickX;
     private Float clickY;
-    private Context context = this;
+    private CrystalAR crystalAR;
+    private ImageView imageView;
+    private ListView modelListView;
+    private ModelRenderer modelRenderer;
+    private RajawaliSurfaceView rajSurface;
 
     // Filenames for obj/awd files.
     // Do not include file extensions for awd files.
@@ -45,20 +41,7 @@ public class CornerActivity extends AppCompatActivity {
             "bumptorus_obj",
             "dark_fighter", // awd
             "space_cruiser", // awd
-//            "dummy_obj_obj",
             "teapot_obj"
-    };
-
-    // Filenames for textures.
-    // Do not include file extensions.
-    String[] modelTextureList = new String[] {
-            null, // no texture
-            "earthtruecolor_nasa_big",
-            "torus_texture",
-            "dark_fighter_6_color",
-            "space_cruiser_4_color_1",
-//            "dummy_wood",
-            null
     };
 
     // The strings that appear in our list.
@@ -68,17 +51,26 @@ public class CornerActivity extends AppCompatActivity {
             "Torus",
             "Dark fighter",
             "Space cruiser",
-//            "Wooden figure",
             "Teapot"
     };
 
-    String[] modelOBJList = new String[]{
+    // Filenames for textures.
+    // Do not include file extensions.
+    String[] modelTextureList = new String[] {
+            null, // no texture.
+            "earthtruecolor_nasa_big",
+            "torus_texture",
+            "dark_fighter_6_color",
+            "space_cruiser_4_color_1",
+            null // no texture.
+    };
+
+    String[] modelTypeList = new String[]{
             "obj",
             "obj",
             "obj",
             "awd",
             "awd",
-//            "obj",
             "obj"
     };
 
@@ -112,16 +104,16 @@ public class CornerActivity extends AppCompatActivity {
         rajSurface.setTransparent(true);
         rajSurface.setZOrderOnTop(true);
         addContentView(rajSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
-        this.objRenderer = new ModelRenderer(this);
-        rajSurface.setSurfaceRenderer(objRenderer);
+        this.modelRenderer = new ModelRenderer(this);
+        rajSurface.setSurfaceRenderer(modelRenderer);
 
         creatListView();
     }
 
     private void creatListView() {
-        objListView = (ListView) findViewById(R.id.modelList);
+        modelListView = (ListView) findViewById(R.id.modelList);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, modelNameList);
-        objListView.setAdapter(adapter);
+        modelListView.setAdapter(adapter);
 
         // Create onclick functionality for each list item.
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
@@ -138,27 +130,27 @@ public class CornerActivity extends AppCompatActivity {
                     : context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
 
                 // Render model.
-                objRenderer.renderModel(model, texture, modelOBJList[position]);
+                modelRenderer.renderModel(model, texture, modelTypeList[position]);
                 // TODO[@stensaethf]
                 // Change coordinates of where the model is displayed.
-                objRenderer.setPosition(1.0, 1.0, 1.0);
+                modelRenderer.setPosition(1.0, 1.0, 1.0);
 
                 // Swap views.
                 swapViews();
             }
         };
 
-        objListView.setOnItemClickListener(itemClickListener);
+        modelListView.setOnItemClickListener(itemClickListener);
     }
 
     private void swapViews() {
-        if (objListView.getVisibility() == View.INVISIBLE) {
-            objListView.setVisibility(View.VISIBLE);
+        if (modelListView.getVisibility() == View.INVISIBLE) {
+            modelListView.setVisibility(View.VISIBLE);
             rajSurface.setVisibility(View.INVISIBLE);
         } else {
             rajSurface.setVisibility(View.VISIBLE);
             rajSurface.setTransparent(true);
-            objListView.setVisibility(View.INVISIBLE);
+            modelListView.setVisibility(View.INVISIBLE);
         }
     }
 }
