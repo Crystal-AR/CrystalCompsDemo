@@ -21,7 +21,7 @@ public class OBJRenderer extends RajawaliRenderer {
 
     public Context context;
     private DirectionalLight directionalLight;
-    private Object3D multiobj;
+    private Object3D obj;
 
     public OBJRenderer(Context context) {
         super(context);
@@ -34,16 +34,16 @@ public class OBJRenderer extends RajawaliRenderer {
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
         getCurrentScene().addLight(directionalLight);
+        getCurrentCamera().setZ(15f);
 
-        renderModel(R.raw.multiobjects_obj);
+//        renderModel();
     }
 
-    public void renderModel(Integer model) {
+    public void renderModel(Integer model, Double x, Double y, Double z) {
         Material material = new Material();
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
-        getCurrentCamera().setZ(15f);
 
         LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager,
                 model);
@@ -52,16 +52,20 @@ public class OBJRenderer extends RajawaliRenderer {
         } catch (ParsingException e) {
             e.printStackTrace();
         }
-        multiobj = parser.getParsedObject();
-        multiobj.setMaterial(material);
-        getCurrentScene().addChild(multiobj);
+        obj = parser.getParsedObject();
+        obj.setMaterial(material);
+        obj.setX(x);
+        obj.setY(y);
+        obj.setZ(z);
+        getCurrentScene().addChild(obj);
+//        getCurrentScene().addLight(directionalLight); // this works, but a scene can only have 1 light, so an error is thrown for the next item.
     }
 
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
-        if (multiobj != null) {
-            multiobj.rotate(Vector3.Axis.Y, 1.0);
+        if (obj != null) {
+            obj.rotate(Vector3.Axis.Y, 1.0);
         }
     }
 
