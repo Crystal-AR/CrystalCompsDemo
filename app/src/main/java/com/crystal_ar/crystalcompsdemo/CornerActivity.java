@@ -18,6 +18,9 @@ import com.crystal_ar.crystal_ar.CrystalAR;
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Frederik on 2/16/17.
  */
@@ -33,23 +36,29 @@ public class CornerActivity extends AppCompatActivity {
     private Float clickY;
     private Context context = this;
 
-    String[] modelFileList = new String[]{
+    // Filenames for obj/awd files.
+    // Do not include file extensions for awd files.
+    // OBJ files do not have a file extension (convert .obj to _obj).
+    String[] modelFileList = new String[] {
             "multiobjects_obj",
             "bumpsphere_obj",
             "bumptorus_obj",
-            "dark_fighter",
-            "space_cruiser"
+            "dark_fighter", // awd
+            "space_cruiser" // awd
     };
 
-    String[] modelTextureList = new String[]{
-            null,
+    // Filenames for textures.
+    // Do not include file extensions.
+    String[] modelTextureList = new String[] {
+            null, // no texture
             "earthtruecolor_nasa_big",
             "torus_texture",
             "dark_fighter_6_color",
             "space_cruiser_4_color_1"
     };
 
-    String[] modelNameList = new String[]{
+    // The strings that appear in our list.
+    String[] modelNameList = new String[] {
             "Multiple objects",
             "Earth",
             "Torus",
