@@ -6,10 +6,13 @@ import android.view.MotionEvent;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
+import org.rajawali3d.loader.LoaderAWD;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.RajawaliRenderer;
 
@@ -40,25 +43,60 @@ public class OBJRenderer extends RajawaliRenderer {
     }
 
     public void renderModel(Integer model, Double x, Double y, Double z) {
+        renderModel(model, x, y, z, null, true);
+    }
+
+    public void renderModel(Integer model, Double x, Double y, Double z, Integer texture, boolean isOBJ) {
+        // If a model already exists, remove it from the scene.
+        if (obj != null) {
+            getCurrentScene().removeChild(obj);
+        }
+
         Material material = new Material();
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
 
-        LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager,
-                model);
-        try {
-            parser.parse();
-        } catch (ParsingException e) {
-            e.printStackTrace();
+        if (texture != null) {
+//          Texture objTexture = new Texture("objTexture", R.drawable.earthtruecolor_nasa_big);
+            Texture objTexture = new Texture("objTexture", texture);
+            try {
+                material.addTexture(objTexture);
+            } catch (ATexture.TextureException error) {
+                Log.d("DEBUG", "TEXTURE ERROR");
+            }
         }
-        obj = parser.getParsedObject();
+
+        if (!isOBJ) {
+            LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager,
+                model);
+//            BaseObject3D obj = awdParser.getParsedObject();
+//            // Configure the object as needed
+//            addChild(obj);
+            try {
+                parser.parse();
+            } catch (ParsingException e) {
+                e.printStackTrace();
+            }
+            obj = parser.getParsedObject();
+        } else {
+            LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager,
+                model);
+
+            try {
+                parser.parse();
+            } catch (ParsingException e) {
+                e.printStackTrace();
+            }
+            obj = parser.getParsedObject();
+        }
+//          obj = parser.getParsedObject();
         obj.setMaterial(material);
         obj.setX(x);
         obj.setY(y);
         obj.setZ(z);
         getCurrentScene().addChild(obj);
-//        getCurrentScene().addLight(directionalLight); // this works, but a scene can only have 1 light, so an error is thrown for the next item.
+//      getCurrentScene().addLight(directionalLight); // this works, but a scene can only have 1 light, so an error is thrown for the next item.
     }
 
     @Override

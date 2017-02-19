@@ -35,22 +35,40 @@ public class CornerActivity extends AppCompatActivity {
     private Float clickY;
     private Context context = this;
 
-    String[] objModelFileList = new String[]{
+    String[] modelFileList = new String[]{
             "multiobjects_obj",
-            "model1",
-            "model2",
-            "model3",
-            "model4",
-            "model5",
+            "bumpsphere_obj",
+            "bumptorus_obj",
+            "dark_fighter",
+            "space_cruiser",
+            null
     };
 
-    String[] objModelNameList = new String[]{
-            "multi objects",
-            "model1",
-            "model2",
-            "model3",
-            "model4",
-            "model5",
+    String[] modelTextureList = new String[]{
+            null,
+            "earthtruecolor_nasa_big",
+            "torus_texture",
+            "dark_fighter_6_color",
+            "space_cruiser_4_color_1",
+            null
+    };
+
+    String[] modelNameList = new String[]{
+            "Multiple objects",
+            "Earth",
+            "Torus",
+            "Dark fighter",
+            "Space cruiser",
+            "EMPTY"
+    };
+
+    boolean[] modelOBJList = new boolean[]{
+            true,
+            true,
+            true,
+            false,
+            false,
+            true // set to correct value
     };
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +100,8 @@ public class CornerActivity extends AppCompatActivity {
     }
 
     private void creatListView() {
-        objListView = (ListView) findViewById(R.id.objModelList);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, objModelNameList);
+        objListView = (ListView) findViewById(R.id.modelList);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, modelNameList);
         objListView.setAdapter(adapter);
 
         // Create onclick functionality for each list item.
@@ -91,10 +109,19 @@ public class CornerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View container, int position, long id) {
                 // Get the model from the resource folder and render it.
-                String modelStr = objModelFileList[position];
-                int model = context.getResources().getIdentifier(modelStr, "raw", context.getPackageName());
+                String modelFile = modelFileList[position];
+                int model = context.getResources().getIdentifier(modelFile, "raw", context.getPackageName());
                 // this is where we would use clickX and clickY.
-                objRenderer.renderModel(model, 1.0, 1.0, 1.0);
+
+                Log.d("HERE", "HERE");
+                String textureFile = modelTextureList[position];
+                Log.d("HERE", "HERE2");
+                Integer texture = textureFile == null ? null : context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
+//                if ()
+//                int texture = context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
+                Log.d("HERE", "HER3");
+
+                objRenderer.renderModel(model, 1.0, 1.0, 1.0, texture, modelOBJList[position]);
                 rajSurface.setVisibility(View.VISIBLE);
                 objListView.setVisibility(View.INVISIBLE);
             }
