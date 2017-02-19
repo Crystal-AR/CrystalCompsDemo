@@ -11,9 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
 
@@ -28,7 +26,7 @@ public class CornerActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private CrystalAR crystalAR;
-    private OBJRenderer objRenderer;
+    private ModelRenderer objRenderer;
     private RajawaliSurfaceView rajSurface;
     private ListView objListView;
     private Float clickX;
@@ -40,8 +38,7 @@ public class CornerActivity extends AppCompatActivity {
             "bumpsphere_obj",
             "bumptorus_obj",
             "dark_fighter",
-            "space_cruiser",
-            null
+            "space_cruiser"
     };
 
     String[] modelTextureList = new String[]{
@@ -49,8 +46,7 @@ public class CornerActivity extends AppCompatActivity {
             "earthtruecolor_nasa_big",
             "torus_texture",
             "dark_fighter_6_color",
-            "space_cruiser_4_color_1",
-            null
+            "space_cruiser_4_color_1"
     };
 
     String[] modelNameList = new String[]{
@@ -58,8 +54,7 @@ public class CornerActivity extends AppCompatActivity {
             "Earth",
             "Torus",
             "Dark fighter",
-            "Space cruiser",
-            "EMPTY"
+            "Space cruiser"
     };
 
     boolean[] modelOBJList = new boolean[]{
@@ -68,13 +63,13 @@ public class CornerActivity extends AppCompatActivity {
             true,
             false,
             false,
-            true // set to correct value
     };
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_corner);
 
+        // Setup onTouchListener for imageView to register click coordinates.
         this.imageView = (ImageView) findViewById(R.id.cornerImageView);
         this.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -82,6 +77,11 @@ public class CornerActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     clickX = event.getX();
                     clickY = event.getY();
+
+                    // This is where we would use clickX and clickY to calculate where the model
+                    // should be in the next frame.
+
+                    // Swap views.
                     objListView.setVisibility(View.VISIBLE);
                     rajSurface.setVisibility(View.INVISIBLE);
                 }
@@ -89,11 +89,12 @@ public class CornerActivity extends AppCompatActivity {
             }
         });
 
+        // Setup RajawaliSurfaceView and create ModelRenderer.
         rajSurface = new RajawaliSurfaceView(this);
         rajSurface.setFrameRate(60.0);
         rajSurface.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
         addContentView(rajSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
-        this.objRenderer = new OBJRenderer(this);
+        this.objRenderer = new ModelRenderer(this);
         rajSurface.setSurfaceRenderer(objRenderer);
 
         creatListView();
@@ -108,26 +109,28 @@ public class CornerActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View container, int position, long id) {
-                // Get the model from the resource folder and render it.
+                // Get the model from the resource folder.
                 String modelFile = modelFileList[position];
                 int model = context.getResources().getIdentifier(modelFile, "raw", context.getPackageName());
-                // this is where we would use clickX and clickY.
 
-                Log.d("HERE", "HERE");
+                // Get the texture from the resource folder.
                 String textureFile = modelTextureList[position];
-                Log.d("HERE", "HERE2");
-                Integer texture = textureFile == null ? null : context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
-//                if ()
-//                int texture = context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
-                Log.d("HERE", "HER3");
+                Integer texture = textureFile == null
+                    ? null
+                    : context.getResources().getIdentifier(textureFile, "drawable", context.getPackageName());
 
-                objRenderer.renderModel(model, 1.0, 1.0, 1.0, texture, modelOBJList[position]);
+                // Render model.
+                objRenderer.renderModel(model, texture, modelOBJList[position]);
+                // TODO[@stensaethf]
+                // Change coordinates of where the model is displayed.
+                objRenderer.setPosition(1.0, 1.0, 1.0);
+
+                // Swap views.
                 rajSurface.setVisibility(View.VISIBLE);
                 objListView.setVisibility(View.INVISIBLE);
             }
         };
 
-        // Setting the item click listener for the listview
         objListView.setOnItemClickListener(itemClickListener);
     }
 }

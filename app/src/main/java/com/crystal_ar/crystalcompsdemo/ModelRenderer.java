@@ -20,15 +20,13 @@ import org.rajawali3d.renderer.RajawaliRenderer;
  * Created by Frederik on 2/16/17.
  */
 
-public class OBJRenderer extends RajawaliRenderer {
+public class ModelRenderer extends RajawaliRenderer {
 
-    public Context context;
     private DirectionalLight directionalLight;
     private Object3D obj;
 
-    public OBJRenderer(Context context) {
+    public ModelRenderer(Context context) {
         super(context);
-        this.context = context;
         setFrameRate(60);
     }
 
@@ -39,21 +37,19 @@ public class OBJRenderer extends RajawaliRenderer {
         getCurrentCamera().setZ(15f);
     }
 
-    public void renderModel(Integer model, Double x, Double y, Double z) {
-        renderModel(model, x, y, z, null, true);
-    }
-
-    public void renderModel(Integer model, Double x, Double y, Double z, Integer texture, boolean isOBJ) {
+    public void renderModel(Integer model, Integer texture, boolean isOBJ) {
         // Clear lights and models.
         getCurrentScene().clearChildren();
         getCurrentScene().clearLights();
         getCurrentScene().addLight(directionalLight);
 
+        // Create material.
         Material material = new Material();
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
 
+        // Only add texture if given.
         if (texture != null) {
             Texture objTexture = new Texture("objTexture", texture);
             try {
@@ -63,9 +59,10 @@ public class OBJRenderer extends RajawaliRenderer {
             }
         }
 
-        if (!isOBJ) {
-            LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager,
-                model);
+        if (isOBJ) {
+            // OBJ loader/parser.
+            LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager, model);
+
             try {
                 parser.parse();
             } catch (ParsingException e) {
@@ -73,9 +70,8 @@ public class OBJRenderer extends RajawaliRenderer {
             }
             obj = parser.getParsedObject();
         } else {
-            LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager,
-                model);
-
+            // AWD loader/parser.
+            LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager, model);
             try {
                 parser.parse();
             } catch (ParsingException e) {
@@ -83,18 +79,22 @@ public class OBJRenderer extends RajawaliRenderer {
             }
             obj = parser.getParsedObject();
         }
-//          obj = parser.getParsedObject();
         obj.setMaterial(material);
-        obj.setX(x);
-        obj.setY(y);
-        obj.setZ(z);
         getCurrentScene().addChild(obj);
-//      getCurrentScene().addLight(directionalLight); // this works, but a scene can only have 1 light, so an error is thrown for the next item.
+    }
+
+    public void setPosition(Double x, Double y, Double z) {
+        // These are coordinates for the virtual world.
+        obj.setPosition(x, y, z);
+
+//        // These are coordinates for the "real" world.
+//        obj.setScreenCoordinates(1.0, 1.0, getViewportWidth(), getViewportHeight(), 1.0);
     }
 
     @Override
     public void onRender(final long elapsedTime, final double deltaTime) {
         super.onRender(elapsedTime, deltaTime);
+        // Rotate object.
         if (obj != null) {
             obj.rotate(Vector3.Axis.Y, 1.0);
         }
