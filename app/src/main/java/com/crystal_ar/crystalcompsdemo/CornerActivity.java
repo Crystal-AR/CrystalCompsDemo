@@ -44,7 +44,9 @@ public class CornerActivity extends AppCompatActivity {
             "bumpsphere_obj",
             "bumptorus_obj",
             "dark_fighter", // awd
-            "space_cruiser" // awd
+            "space_cruiser", // awd
+//            "dummy_obj_obj",
+            "teapot_obj"
     };
 
     // Filenames for textures.
@@ -54,7 +56,9 @@ public class CornerActivity extends AppCompatActivity {
             "earthtruecolor_nasa_big",
             "torus_texture",
             "dark_fighter_6_color",
-            "space_cruiser_4_color_1"
+            "space_cruiser_4_color_1",
+//            "dummy_wood",
+            null
     };
 
     // The strings that appear in our list.
@@ -63,15 +67,19 @@ public class CornerActivity extends AppCompatActivity {
             "Earth",
             "Torus",
             "Dark fighter",
-            "Space cruiser"
+            "Space cruiser",
+//            "Wooden figure",
+            "Teapot"
     };
 
-    boolean[] modelOBJList = new boolean[]{
-            true,
-            true,
-            true,
-            false,
-            false,
+    String[] modelOBJList = new String[]{
+            "obj",
+            "obj",
+            "obj",
+            "awd",
+            "awd",
+//            "obj",
+            "obj"
     };
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +96,10 @@ public class CornerActivity extends AppCompatActivity {
                     clickY = event.getY();
 
                     // This is where we would use clickX and clickY to calculate where the model
-                    // should be in the next frame.
+                    // should be.
 
                     // Swap views.
-                    objListView.setVisibility(View.VISIBLE);
-                    rajSurface.setVisibility(View.INVISIBLE);
+                    swapViews();
                 }
                 return true;
             }
@@ -102,6 +109,8 @@ public class CornerActivity extends AppCompatActivity {
         rajSurface = new RajawaliSurfaceView(this);
         rajSurface.setFrameRate(60.0);
         rajSurface.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
+        rajSurface.setTransparent(true);
+        rajSurface.setZOrderOnTop(true);
         addContentView(rajSurface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
         this.objRenderer = new ModelRenderer(this);
         rajSurface.setSurfaceRenderer(objRenderer);
@@ -135,11 +144,21 @@ public class CornerActivity extends AppCompatActivity {
                 objRenderer.setPosition(1.0, 1.0, 1.0);
 
                 // Swap views.
-                rajSurface.setVisibility(View.VISIBLE);
-                objListView.setVisibility(View.INVISIBLE);
+                swapViews();
             }
         };
 
         objListView.setOnItemClickListener(itemClickListener);
+    }
+
+    private void swapViews() {
+        if (objListView.getVisibility() == View.INVISIBLE) {
+            objListView.setVisibility(View.VISIBLE);
+            rajSurface.setVisibility(View.INVISIBLE);
+        } else {
+            rajSurface.setVisibility(View.VISIBLE);
+            rajSurface.setTransparent(true);
+            objListView.setVisibility(View.INVISIBLE);
+        }
     }
 }

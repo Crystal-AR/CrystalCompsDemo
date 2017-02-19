@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
+import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.LoaderAWD;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
@@ -37,7 +38,7 @@ public class ModelRenderer extends RajawaliRenderer {
         getCurrentCamera().setZ(15f);
     }
 
-    public void renderModel(Integer model, Integer texture, boolean isOBJ) {
+    public void renderModel(Integer model, Integer texture, String type) {
         // Clear lights and models.
         getCurrentScene().clearChildren();
         getCurrentScene().clearLights();
@@ -59,7 +60,7 @@ public class ModelRenderer extends RajawaliRenderer {
             }
         }
 
-        if (isOBJ) {
+        if (type.equals("obj")) {
             // OBJ loader/parser.
             LoaderOBJ parser = new LoaderOBJ(getContext().getResources(), mTextureManager, model);
 
@@ -69,7 +70,7 @@ public class ModelRenderer extends RajawaliRenderer {
                 e.printStackTrace();
             }
             obj = parser.getParsedObject();
-        } else {
+        } else if (type.equals("awd")) {
             // AWD loader/parser.
             LoaderAWD parser = new LoaderAWD(getContext().getResources(), mTextureManager, model);
             try {
@@ -78,6 +79,8 @@ public class ModelRenderer extends RajawaliRenderer {
                 e.printStackTrace();
             }
             obj = parser.getParsedObject();
+        } else {
+            Log.d("DEBUG", "UNSUPPORTED FILE TYPE");
         }
         obj.setMaterial(material);
         getCurrentScene().addChild(obj);
