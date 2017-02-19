@@ -71,7 +71,7 @@ public class CornerActivity extends AppCompatActivity {
             "obj",
             "awd",
             "awd",
-            "obj"
+            "obj2"
     };
 
     protected void onCreate(Bundle savedInstanceState) {

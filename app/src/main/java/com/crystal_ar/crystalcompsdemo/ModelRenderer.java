@@ -16,6 +16,8 @@ import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.RajawaliRenderer;
 
+import java.security.InvalidParameterException;
+
 /**
  * Created by Frederik on 2/16/17.
  */
@@ -80,8 +82,9 @@ public class ModelRenderer extends RajawaliRenderer {
             model = parser.getParsedObject();
         } else {
             Log.d("DEBUG", "UNSUPPORTED FILE TYPE ERROR");
+            throw new InvalidParameterException("renderModel, UNSUPPORTED FILE TYPE: " + type);
         }
-        
+
         model.setMaterial(material);
         getCurrentScene().addChild(model);
     }
