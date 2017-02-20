@@ -3,4 +3,33 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/cornerImageView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="40" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@android:drawable/bottom_bar"
+        android:paddingLeft="4.0dip"
+        android:paddingTop="5.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingBottom="5.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/BtnTakePhoto"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:text="Take Photo"
+            android:layout_weight="10" />
+
+        <Button
+            android:id="@+id/BtnLoadPhoto"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:text="Load Photo"
+            android:layout_weight="10" />
+    </LinearLayout>
 </LinearLayout>
