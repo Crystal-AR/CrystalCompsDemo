@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ import com.googlecode.leptonica.android.Pixa;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 public class CrystalAR {
+    public final static int CORNERS_FOUND = 2;
     public final static int IMAGE_PROCESSED = 1;
 
     private TessBaseAPI mTess;    //Tess API reference
@@ -54,6 +56,8 @@ public class CrystalAR {
         appContext = context;
         datapath = appContext.getFilesDir() + "/tesseract/";
         mTess = new TessBaseAPI();
+        // Default language of English.
+        setLanguage("eng");
         img = image;
         processImage(img);
     }
@@ -172,13 +176,7 @@ public class CrystalAR {
      * @return List<Word> - phone numbers.
      */
     public List<Word> getPhoneNumbers() {
-        // Regex patterns that match:
-        // 1. [+(]dd[)][- .]dd[- .]dd[- .]dd[- .]dd
-        // 2. [+(]dd[)][- .]dd[- .]dd[- .]dd
-        // 3. [+(]dd[)][- .]dd[- .]dd
-        String reg = "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|" +
-                "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|" +
-                "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
+        String reg = "([\\+(]?(\\d){1,}[)]?([- \\.]?(\\d){2,}){1,4})";
 
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(OCRresult);
@@ -198,10 +196,13 @@ public class CrystalAR {
         for (String phoneNumber : phoneNumberStrings) {
             // Get start and end index of the phone number in OCRresult.
             startIndex = OCRresult.indexOf(phoneNumber);
-            endIndex = phoneNumber.length() + startIndex;
+            // We subtract 1 because indices start at 0.
+            endIndex = startIndex + phoneNumber.length() - 1;
             phoneNumbers.clear();
 
-            ocrResultIndex = 0;
+            // ocrResultIndex starts at -1 because index starts at 0 and we are adding the length
+            // of the word to update the index.
+            ocrResultIndex = -1;
             for (Word word : words) {
                 // Increment ocrResultIndex by the length of the word.
                 ocrResultIndex = ocrResultIndex + word.str.length();
@@ -321,6 +322,36 @@ public class CrystalAR {
             Message message = new Message();
             message.what = CrystalAR.IMAGE_PROCESSED;
             this.handler.sendMessage(message);
+        }
+
+        public TreeSet<IntPair> findCorners(Bitmap image){
+            CornerFinder sm = new CornerFinder();
+            TreeSet<IntPair> corners = sm.findCorners(image);
+
+            return corners;
+        }
+
+        public FindCornersRunnable findCornersRunnable(Handler handler, Bitmap image) {
+            return new FindCornersRunnable(handler, image);
+        }
+
+        private class FindCornersRunnable implements Runnable {
+            Handler handler;
+            Bitmap image;
+
+            public FindCornersRunnable(Handler handler, Bitmap image) {
+                this.handler = handler;
+                this.image = image;
+            }
+
+            public void run() {
+                TreeSet<IntPair> corners = findCorners(this.image);
+
+                Message message = new Message();
+                message.what = CrystalAR.CORNERS_FOUND;
+                message.obj = corners;
+                this.handler.sendMessage(message);
+            }
         }
 
     }
