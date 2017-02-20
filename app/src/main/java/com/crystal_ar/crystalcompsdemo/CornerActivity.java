@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -81,10 +83,7 @@ public class CornerActivity extends AppCompatActivity {
                 photo = BitmapFactory.decodeFile(picturePath);
             }
 
-            // TODO
-            // Run find corner code here before setting the imageview to contain the photo.
             initiateCornerHandler(imageView);
-//            imageView.setImageBitmap(photo);
         }
     }
 
@@ -104,8 +103,24 @@ public class CornerActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             switch (message.what) {
                 case CrystalAR.CORNERS_FOUND:
-                    imageView.setImageBitmap(photo);
-                    // message.obj --> corners;
+                    // Make bitmap mutable.
+                    Bitmap workingBitmap = Bitmap.createBitmap(photo);
+                    Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+                    // Draw the image bitmap into the canvas.
+                    Canvas c = new Canvas(mutableBitmap);
+                    c.drawBitmap(mutableBitmap, 0, 0, null);
+                    Paint p = new Paint();
+                    p.setARGB(255,0,0,255);
+                    p.setStyle(Paint.Style.STROKE);
+                    p.setStrokeWidth(3);
+
+                    // Draw a blue dot at each corner.
+                    for (IntPair coordinate : (TreeSet<IntPair>) message.obj) {
+                        c.drawPoint(coordinate.x, coordinate.y, p);
+                    }
+
+                    imageView.setImageBitmap(mutableBitmap);
                     break;
             }
         }
