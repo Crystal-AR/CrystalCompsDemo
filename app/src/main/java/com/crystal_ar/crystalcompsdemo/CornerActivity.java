@@ -33,12 +33,10 @@ public class CornerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_corner);
 
         crystalAR = new CrystalAR(getApplicationContext());
-
         imageView = (ImageView) this.findViewById(R.id.cornerImageView);
 
         Button takePhotoButton = (Button) this.findViewById(R.id.BtnTakePhoto);
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -48,10 +46,8 @@ public class CornerActivity extends AppCompatActivity {
 
         Button loadPhotoButton = (Button) this.findViewById(R.id.BtnLoadPhoto);
         loadPhotoButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(
                         Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
