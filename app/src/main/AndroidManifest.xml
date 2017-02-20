@@ -35,6 +35,7 @@
         </activity>
         <activity android:name=".TextActivity"></activity>
         <activity android:name=".CornerActivity"></activity>
+        <activity android:name=".ModelActivity"></activity>
     </application>
 
 </manifest>

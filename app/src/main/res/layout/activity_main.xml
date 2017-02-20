@@ -36,7 +36,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="Corner"/>
     <Button
-        android:id="@+id/BtnObjectActivity"
+        android:id="@+id/BtnModelActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
