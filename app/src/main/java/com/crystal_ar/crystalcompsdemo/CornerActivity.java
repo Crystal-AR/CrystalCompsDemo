@@ -7,13 +7,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
+import com.crystal_ar.crystal_ar.IntPair;
+
+import java.util.TreeSet;
 
 /**
  * Created by Frederik on 2/19/17.
@@ -77,7 +83,31 @@ public class CornerActivity extends AppCompatActivity {
 
             // TODO
             // Run find corner code here before setting the imageview to contain the photo.
-            imageView.setImageBitmap(photo);
+            initiateCornerHandler(imageView);
+//            imageView.setImageBitmap(photo);
+        }
+    }
+
+    public void initiateCornerHandler(ImageView imageView) {
+        Thread thread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(imageView), photo));
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private class cornerHandler extends Handler {
+        ImageView imageView;
+
+        public cornerHandler(ImageView imageView) {
+            this.imageView = imageView;
+        }
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case CrystalAR.CORNERS_FOUND:
+                    imageView.setImageBitmap(photo);
+                    // message.obj --> corners;
+                    break;
+            }
         }
     }
 }
