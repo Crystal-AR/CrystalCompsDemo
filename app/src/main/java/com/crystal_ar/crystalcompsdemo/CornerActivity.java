@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
 
@@ -24,6 +25,7 @@ import org.rajawali3d.surface.RajawaliSurfaceView;
 public class CornerActivity extends AppCompatActivity {
 
     private Context context = this;
+    private TextView clickText;
     private Float clickX;
     private Float clickY;
     private CrystalAR crystalAR;
@@ -77,6 +79,9 @@ public class CornerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_corner);
+
+        // Store cornerOverlayText TextView.
+        this.clickText = (TextView) findViewById(R.id.cornerOverlayText);
 
         // Setup onTouchListener for imageView to register click coordinates.
         this.imageView = (ImageView) findViewById(R.id.cornerImageView);
@@ -145,11 +150,15 @@ public class CornerActivity extends AppCompatActivity {
 
     private void swapViews() {
         if (modelListView.getVisibility() == View.INVISIBLE) {
+            // Show list, hide rajSurface, hide click text.
+            clickText.setVisibility(View.INVISIBLE);
             modelListView.setVisibility(View.VISIBLE);
             rajSurface.setVisibility(View.INVISIBLE);
         } else {
+            // Hide list, show rajSurface, show click text.
             rajSurface.setVisibility(View.VISIBLE);
             rajSurface.setTransparent(true);
+            clickText.setVisibility(View.VISIBLE);
             modelListView.setVisibility(View.INVISIBLE);
         }
     }
