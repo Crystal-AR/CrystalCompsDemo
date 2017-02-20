@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -14,25 +17,55 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
+import com.crystal_ar.crystal_ar.Word;
+
+import java.util.List;
+
+import static android.graphics.Color.BLUE;
 
 public class TextActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int RESULT_LOAD_IMAGE = 1;
 
+    Bitmap photo;
+
+    Boolean urlChecked = false;
+    Boolean phoneChecked = false;
+    Boolean replaceImageChecked = false;
+    Boolean emailChecked = false;
+
 
     private ImageView imageView;
     private CrystalAR crystalAR;
+    private CheckBox emailCheckBox;
+    private CheckBox urlCheckBox;
+    private CheckBox phoneNumbersCheckBox;
+    private CheckBox replaceImageCheckBox;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
 
+//        photo = BitmapFactory.decodeResource(getResources(), R.drawable.test_url);
+
         this.imageView = (ImageView)this.findViewById(R.id.textImageView);
+        emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
+        urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
+        phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
+        replaceImageCheckBox = (CheckBox) findViewById(R.id.replaceImageCheckBox);
+        Context context = getApplicationContext();
+        crystalAR = new CrystalAR(context);
+        crystalAR.setLanguage("eng");
+
         Button takePhotoButton = (Button) this.findViewById(R.id.BtnTakePhoto);
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
 
@@ -56,17 +89,68 @@ public class TextActivity extends AppCompatActivity {
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
+
+        emailCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                if(emailChecked == false) {
+                    emailChecked = true;
+                }
+                else{
+                    emailChecked = false;
+                }
+            }
+        });
+
+        phoneNumbersCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                if(phoneChecked == false) {
+                    phoneChecked = true;
+                }
+                else{
+                    phoneChecked = false;
+                }
+            }
+        });
+
+        replaceImageCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                if(replaceImageChecked == false) {
+                    replaceImageChecked = true;
+                }
+                else{
+                    replaceImageChecked = false;
+                }
+            }
+        });
+
+        urlCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                if(urlChecked == false) {
+                    urlChecked = true;
+                }
+                else{
+                    urlChecked = false;
+                }
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Context context = getApplicationContext();
-            crystalAR = new CrystalAR(context);
-            crystalAR.setLanguage("eng");
+            photo = (Bitmap) data.getExtras().get("data");
+
             crystalAR.processImage(photo);
-            crystalAR.getPhoneNumbers();
-            Log.d(crystalAR.getPhoneNumbers().get(0), "getPhoneNumbers: ");
+
+            if(urlChecked == true)
+                createURLRect(crystalAR.getURLs());
+            if(phoneChecked == true)
+                createPhoneNosRect(crystalAR.getPhoneNumbers());
+            if(emailChecked == true)
+                createPhoneNosRect(crystalAR.getEmails());
 
             imageView.setImageBitmap(photo);
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
@@ -85,4 +169,29 @@ public class TextActivity extends AppCompatActivity {
 
         }
     }
+
+    protected void createURLRect(List<Word> urls)
+    {
+        Bitmap tempPhoto = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.RGB_565);
+        Canvas c = new Canvas();
+        Paint p=new Paint();
+        p.setARGB(0,0,0,255);
+        for(Word url : urls) {
+            Log.d("str:",url.str);
+            c.drawRect(url.x, url.y, url.x + url.width, url.y + url.height, p);
+        }
+        Log.d("hello", "createURLRect: 1");
+
+    }
+
+    protected void createEmailsRect(List<Word> emails)
+    {
+
+    }
+
+    protected void createPhoneNosRect(List<Word> phoneNos)
+    {
+
+    }
+
 }
