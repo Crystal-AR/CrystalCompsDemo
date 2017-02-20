@@ -32,7 +32,9 @@ public class CornerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_corner);
 
-        this.imageView = (ImageView)this.findViewById(R.id.cornerImageView);
+        crystalAR = new CrystalAR(getApplicationContext());
+
+        imageView = (ImageView) this.findViewById(R.id.cornerImageView);
 
         Button takePhotoButton = (Button) this.findViewById(R.id.BtnTakePhoto);
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
