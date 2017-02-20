@@ -28,4 +28,5 @@ dependencies {
     compile 'com.rmtheis:tess-two:5.4.1'
     compile project(':crystal-ar')
     testCompile 'junit:junit:4.12'
+    compile 'org.rajawali3d:rajawali:1.0.186-SNAPSHOT@aar'
 }
