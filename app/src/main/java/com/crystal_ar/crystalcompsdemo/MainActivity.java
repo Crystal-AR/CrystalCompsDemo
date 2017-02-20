@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnTextActivity;
     private Button btnCornerActivity;
-    private Button btnObjectActivity;
+    private Button btnModelActivity;
 
 
     @Override
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnTextActivity = (Button) findViewById(R.id.BtnTextActivity);
         btnCornerActivity = (Button) findViewById(R.id.BtnCornerActivity);
-        btnObjectActivity = (Button) findViewById(R.id.BtnObjectActivity);
+        btnModelActivity = (Button) findViewById(R.id.BtnModelActivity);
 
         btnTextActivity.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -36,8 +36,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CornerActivity.class);
                 MainActivity.this.startActivity(intent);
             }
+        });
 
-
+        btnModelActivity.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ModelActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
         });
     }
 }
