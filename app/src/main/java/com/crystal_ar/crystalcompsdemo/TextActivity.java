@@ -59,7 +59,7 @@ public class TextActivity extends AppCompatActivity {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
+        photo = BitmapFactory.decodeResource(getResources(), R.drawable.replace, opt);
 
 
         this.imageView = (ImageView)this.findViewById(R.id.textImageView);
@@ -158,6 +158,8 @@ public class TextActivity extends AppCompatActivity {
                 createPhoneNosRect(crystalAR.getPhoneNumbers());
             if(emailChecked == true)
                 createEmailsRect(crystalAR.getEmails());
+            if(replaceImageChecked == true)
+                replaceWithImg();
 
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
@@ -236,6 +238,22 @@ public class TextActivity extends AppCompatActivity {
                 imageView.setImageBitmap(tempPhoto);
             }
         });
+    }
+
+    protected void replaceWithImg()
+    {
+        String[] replace= {"Email", "Contact"};
+
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(),R.drawable.email);//assign your bitmap;
+        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(),R.drawable.phone);//assign your bitmap;
+        Bitmap[] arrayOfBitmap = {bitmap1, bitmap2};
+        tempPhoto = crystalAR.replaceWithImage(tempPhoto, replace, arrayOfBitmap);
+        imageView.post(new Runnable() {
+            public void run() {
+                imageView.setImageBitmap(tempPhoto);
+            }
+        });
+
     }
 }
 
