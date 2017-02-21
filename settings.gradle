@@ -1,1 +1,1 @@
-include ':app', ':crystal-ar'
+include ':app', ':crystal-ar', ':crystal-ar-debug'
