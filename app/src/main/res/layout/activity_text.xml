@@ -5,26 +5,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:gravity="bottom"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-              android:weightSum="100"
+                android:background="@drawable/background_c"
+                android:weightSum="100"
                 tools:context="com.crystal_ar.crystalcompsdemo.TextActivity">
 
     <ImageView
         android:id="@+id/textImageView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_weight="40"
 />
 
-
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <CheckBox
         android:id="@+id/replaceImageCheckBox"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_weight="10"
+        android:textColor="#FFFFFF"
+        android:buttonTint="#FFFFFF"
+        android:textStyle="bold"
         android:text="Replace w/ Image"/>
 
     <CheckBox
@@ -32,13 +42,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10"
+        android:textColor="#FFFFFF"
+        android:buttonTint="#FFFFFF"
+        android:textStyle="bold"
         android:text="URLs"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/phoneNumberCheckBox"
-        android:layout_width="wrap_content"
+        android:layout_width="89dp"
         android:layout_height="wrap_content"
         android:layout_weight="10"
+        android:textColor="#FFFFFF"
+        android:buttonTint="#FFFFFF"
+        android:textStyle="bold"
         android:text="Phone Numbers"/>
 
     <CheckBox
@@ -46,20 +70,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10"
+        android:textColor="#FFFFFF"
+        android:buttonTint="#FFFFFF"
+        android:textStyle="bold"
         android:text="Emails"/>
+    </LinearLayout>
 
-    <Button android:id="@+id/BtnTakePhoto"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button android:id="@+id/BtnTakePhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:background="#8000"
+            android:textColor="#FFF"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
             android:text="Take Photo"/>
-    <Button
-        android:id="@+id/BtnLoadPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:text="Load Photo"/>
-
+        <Button
+            android:id="@+id/BtnLoadPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:background="#8000"
+            android:textColor="#FFF"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
+            android:text="Load Photo"/>
+    </LinearLayout>
 
 
 </LinearLayout>
