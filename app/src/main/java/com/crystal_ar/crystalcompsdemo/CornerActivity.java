@@ -116,7 +116,8 @@ public class CornerActivity extends AppCompatActivity {
                     p.setStrokeWidth(3);
 
                     // Draw a blue dot at each corner.
-                    for (IntPair coordinate : (TreeSet<IntPair>) message.obj) {
+                    IntPair[] corners = (IntPair[]) message.obj;
+                    for (IntPair coordinate : corners) {
                         c.drawPoint(coordinate.x, coordinate.y, p);
                     }
 
