@@ -59,7 +59,7 @@ public class TextActivity extends AppCompatActivity {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.replace, opt);
+        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
 
 
         this.imageView = (ImageView)this.findViewById(R.id.textImageView);
