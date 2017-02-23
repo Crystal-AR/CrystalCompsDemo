@@ -1,8 +1,10 @@
 package com.crystal_ar.crystalcompsdemo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,15 +15,19 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Range;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
 import com.crystal_ar.crystal_ar.Word;
@@ -51,6 +57,10 @@ public class TextActivity extends AppCompatActivity {
     private CheckBox phoneNumbersCheckBox;
     private CheckBox replaceImageCheckBox;
 
+    private List<Word> urls;
+    private List<Word> phoneNumbers;
+    private List<Word> emails;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +72,7 @@ public class TextActivity extends AppCompatActivity {
         photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
 
 
-        this.imageView = (ImageView)this.findViewById(R.id.textImageView);
+        this.imageView = (ImageView) this.findViewById(R.id.textImageView);
         emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
         urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
         phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
@@ -97,11 +107,10 @@ public class TextActivity extends AppCompatActivity {
 
         emailCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                if(emailChecked == false) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (emailChecked == false) {
                     emailChecked = true;
-                }
-                else{
+                } else {
                     emailChecked = false;
                 }
             }
@@ -109,11 +118,10 @@ public class TextActivity extends AppCompatActivity {
 
         phoneNumbersCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                if(phoneChecked == false) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (phoneChecked == false) {
                     phoneChecked = true;
-                }
-                else{
+                } else {
                     phoneChecked = false;
                 }
             }
@@ -121,11 +129,10 @@ public class TextActivity extends AppCompatActivity {
 
         replaceImageCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                if(replaceImageChecked == false) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (replaceImageChecked == false) {
                     replaceImageChecked = true;
-                }
-                else{
+                } else {
                     replaceImageChecked = false;
                 }
             }
@@ -133,11 +140,10 @@ public class TextActivity extends AppCompatActivity {
 
         urlCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                if(urlChecked == false) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (urlChecked == false) {
                     urlChecked = true;
-                }
-                else{
+                } else {
                     urlChecked = false;
                 }
             }
@@ -151,19 +157,25 @@ public class TextActivity extends AppCompatActivity {
 
             crystalAR.processImage(photo);
 
-            tempPhoto = Bitmap.createBitmap(photo, 0,0,photo.getWidth(), photo.getHeight());
-            if(urlChecked == true)
-                createURLRect(crystalAR.getURLs());
-            if(phoneChecked == true)
-                createPhoneNosRect(crystalAR.getPhoneNumbers());
-            if(emailChecked == true)
-                createEmailsRect(crystalAR.getEmails());
-            if(replaceImageChecked == true)
-                replaceWithImg();
+            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
+            if (urlChecked == true) {
+                urls = crystalAR.getURLs();
+                createURLRect(urls);
+            }
+
+            if (phoneChecked == true) {
+                phoneNumbers = crystalAR.getPhoneNumbers();
+                createPhoneNosRect(phoneNumbers);
+            }
+
+            if (emailChecked == true) {
+                emails = crystalAR.getEmails();
+                createEmailsRect(emails);
+            }
 
         } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -172,24 +184,138 @@ public class TextActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
+            if (urlChecked == true)
+                createURLRect(crystalAR.getURLs());
+            if (phoneChecked == true)
+                createPhoneNosRect(crystalAR.getPhoneNumbers());
+            if (emailChecked == true)
+                createEmailsRect(crystalAR.getEmails());
 
         }
     }
 
-    protected void createURLRect(List<Word> urls)
-    {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+        y = y - 100;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+
+                if(emails != null) {
+                    for (int j = 0; j < emails.size(); j++) {
+//                        Log.d("left email X", Integer.toString(emails.get(j).x));
+//                        Log.d("Touch x", Float.toString(x));
+//                        Log.d("        right email X", Integer.toString(emails.get(j).x + emails.get(j).width));
+//                        Log.d("top email Y", Integer.toString(emails.get(j).y));
+//                        Log.d("Touch y", Float.toString(y));
+//                        Log.d("bottom email Y", Integer.toString(emails.get(j).y + emails.get(j).height));
+
+                        if ((x + 170 > emails.get(j).x && x + 170 < emails.get(j).x + emails.get(j).width) && (y + 140 > emails.get(j).y && y + 140 < emails.get(j).y + emails.get(j).height)) {
+                            Log.d("awesome", "pants");
+                            Intent intent = new Intent(Intent.ACTION_SENDTO);
+                            intent.setType("text/plain");
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
+                            intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
+                            intent.setData(Uri.parse("mailto:" + Uri.parse(emails.get(j).str)));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+
+                    }
+                }
+                if(urls!= null) {
+                    for (int i = 0; i < urls.size(); i++) {
+                        int xOffset = 170;
+                        int yOffset = 130-120;
+                        Log.d("left url X", Integer.toString(urls.get(i).x));
+                        Log.d("Touch x", Float.toString(x+xOffset));
+                        Log.d("        right url X", Integer.toString(urls.get(i).x + urls.get(i).width));
+                        Log.d("top url Y", Integer.toString(urls.get(i).y));
+                        Log.d("Touch y", Float.toString(y+yOffset));
+                        Log.d("bottom url Y", Integer.toString(urls.get(i).y + urls.get(i).height));
+
+                        //Check if the x and y position of the touch is inside the bitmap
+                        if (x + xOffset > urls.get(i).x && x + xOffset < urls.get(i).x + urls.get(i).width && y + yOffset > urls.get(i).y && y + yOffset < urls.get(i).y + urls.get(i).height) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(i).str));
+                            startActivity(browserIntent);
+                        }
+
+                    }
+                }
+                if(phoneNumbers != null) {
+                    for (int k = 0; k < phoneNumbers.size(); k++) {
+                        int xOffset = 50 + 220;
+                        int yOffset = 150 - 80;
+//                        Log.d("left phone X", Integer.toString(phoneNumbers.get(k).x));
+//                        Log.d("Touch x", Float.toString(x + xOffset));
+//                        Log.d("        right phone X", Integer.toString(phoneNumbers.get(k).x + phoneNumbers.get(k).width));
+//                        Log.d("top phone Y", Integer.toString(phoneNumbers.get(k).y));
+//                        Log.d("Touch y", Float.toString(y + yOffset));
+//                        Log.d("bottom phone Y", Integer.toString(phoneNumbers.get(k).y + phoneNumbers.get(k).height));
+
+
+                        if (x+xOffset > phoneNumbers.get(k).x && x+xOffset < phoneNumbers.get(k).x + phoneNumbers.get(k).width && y+yOffset > phoneNumbers.get(k).y && y+yOffset < phoneNumbers.get(k).y + phoneNumbers.get(k).height) {
+
+                            Intent intent = new Intent(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + phoneNumbers.get(k).str));
+                            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                //return TODO;
+                            }
+                            startActivity(intent);
+                        }
+
+                    }
+                }
+
+
+                return true;
+        }
+
+/*
+        array = getEmails
+        loop through all rectangles
+        if touch event is within/ close rectangle
+        Make urk intent using corresponding word
+        */
+
+
+//        float x = event.getX();
+//        float y = event.getY();
+//        switch(event.getAction())
+//        {
+//            case MotionEvent.ACTION_DOWN:
+//                //Check if the x and y position of the touch is inside the bitmap
+//                if( x > bitmapXPosition && x < bitmapXPosition + bitmapWidth && y > bitmapYPosition && y < bitmapYPosition + bitmapHeight )
+//                {
+//                    //Bitmap touched
+//                }
+//                return true;
+//        }
+        return false;
+    }
+
+    protected void createURLRect(List<Word> words) {
+        urls = words;
         Canvas c = new Canvas(tempPhoto);
         //Draw the image bitmap into the cavas
         c.drawBitmap(tempPhoto, 0, 0, null);
-        Paint p=new Paint();
-        p.setARGB(255,0,0,255);
+        Paint p = new Paint();
+        p.setARGB(255, 0, 0, 255);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth (3);
+        p.setStrokeWidth(3);
 
-        for(Word url : urls) {
-            c.drawRect(new Rect(url.x-5, url.y-5, url.x + url.width + 5, url.y + url.height), p);
+        for (Word url : urls) {
+            c.drawRect(new Rect(url.x - 5, url.y - 5, url.x + url.width + 5, url.y + url.height), p);
         }
         imageView.post(new Runnable() {
             public void run() {
@@ -198,20 +324,19 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
-    protected void createEmailsRect(List<Word> emails)
-    {
+    protected void createEmailsRect(List<Word> emails) {
         Bitmap mutableBitmap = tempPhoto.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(mutableBitmap);
         Canvas c = new Canvas(tempPhoto);
         //Draw the image bitmap into the cavas
         c.drawBitmap(tempPhoto, 0, 0, null);
-        Paint p=new Paint();
-        p.setARGB(255,255,0,0);
+        Paint p = new Paint();
+        p.setARGB(255, 255, 0, 0);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth (3);
+        p.setStrokeWidth(3);
 
-        for(Word email : emails) {
-            c.drawRect(new Rect(email.x-5, email.y-5, email.x + email.width + 5, email.y + email.height), p);
+        for (Word email : emails) {
+            c.drawRect(new Rect(email.x - 5, email.y - 5, email.x + email.width + 5, email.y + email.height), p);
         }
         imageView.post(new Runnable() {
             public void run() {
@@ -220,18 +345,17 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
-    protected void createPhoneNosRect(List<Word> phoneNos)
-    {
+    protected void createPhoneNosRect(List<Word> phoneNos) {
         Canvas c = new Canvas(tempPhoto);
         //Draw the image bitmap into the cavas
         c.drawBitmap(tempPhoto, 0, 0, null);
-        Paint p=new Paint();
-        p.setARGB(255,0,255,0);
+        Paint p = new Paint();
+        p.setARGB(255, 0, 255, 0);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth (3);
+        p.setStrokeWidth(3);
 
-        for(Word no : phoneNos) {
-            c.drawRect(new Rect(no.x-5, no.y-5, no.x + no.width + 5, no.y + no.height), p);
+        for (Word no : phoneNos) {
+            c.drawRect(new Rect(no.x - 5, no.y - 5, no.x + no.width + 5, no.y + no.height), p);
         }
         imageView.post(new Runnable() {
             public void run() {
