@@ -3,7 +3,10 @@ package com.crystal_ar.crystalcompsdemo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -20,6 +23,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -38,8 +42,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import com.crystal_ar.crystal_ar.CrystalAR;
+import com.crystal_ar.crystal_ar.IntPair;
 
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
@@ -83,7 +89,7 @@ public class ModelActivity extends AppCompatActivity {
     private ImageReader imageReader;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-
+    private Bitmap photo;
     // Filenames for obj/awd files.
     // Do not include file extensions for awd files.
     // OBJ files do not have a file extension (convert .obj to _obj).
@@ -131,6 +137,7 @@ public class ModelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model);
+        crystalAR = new CrystalAR(getApplicationContext());
 
         this.clickText = (TextView) findViewById(R.id.cornerOverlayText);
 
@@ -219,7 +226,7 @@ public class ModelActivity extends AppCompatActivity {
             }
 
             // Setup image reader for getting individual frames.
-            imageReader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            imageReader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 2);
             imageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -269,6 +276,30 @@ public class ModelActivity extends AppCompatActivity {
             @Override
             public void onImageAvailable(ImageReader reader) {
                 Image readImage = reader.acquireLatestImage();
+//                CrystalAR crystalAR;
+//                ImageView imageView;
+
+
+                if(readImage.getFormat() == ImageFormat.JPEG)
+                {
+                    ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
+                    buffer.rewind();
+                    byte[] jpegByteData = new byte[buffer.capacity()];
+                    buffer.get(jpegByteData);
+                    Log.e("JpegByteData", String.valueOf(jpegByteData == null));
+                    photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
+//                    initiateCornerHandlerL(textureView);
+                    Log.e("PHOTO", String.valueOf(photo == null));
+
+                    IntPair[] corners = crystalAR.findCorners(photo);
+                    for (IntPair coordinate : corners) {
+                        Log.e("CORNERS X", String.valueOf(coordinate.x));
+                        Log.e("CORNERS Y", String.valueOf(coordinate.y));
+                    }
+                    photo.recycle();
+                    photo = null;
+                }
+
 
                 // TODO[mugazambis]
                 // Find corners of image and do stuff.
@@ -278,6 +309,49 @@ public class ModelActivity extends AppCompatActivity {
             }
         };
 
+    public void initiateCornerHandlerL(TextureView textureView) {
+        Thread thread = new Thread(crystalAR.findCornersRunnable(new cornerHandlerL(textureView), photo));
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private class cornerHandlerL extends Handler {
+        TextureView textureView;
+
+        public cornerHandlerL(TextureView textureView) {
+            this.textureView = textureView;
+        }
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case CrystalAR.CORNERS_FOUND:
+                    // Make bitmap mutable.
+                    Bitmap workingBitmap = Bitmap.createBitmap(photo);
+                    Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+                    // Draw the image bitmap into the canvas.
+                    Canvas c = new Canvas(mutableBitmap);
+                    c.drawBitmap(mutableBitmap, 0, 0, null);
+                    Paint p = new Paint();
+                    p.setARGB(255,0,0,255);
+                    p.setStyle(Paint.Style.STROKE);
+                    p.setStrokeWidth(3);
+
+                    // Draw a blue dot at each corner.
+                    IntPair[] corners = (IntPair[]) message.obj;
+                    for (IntPair coordinate : corners) {
+                        c.drawPoint(coordinate.x, coordinate.y, p);
+                        Log.e("CORNERS X", String.valueOf(coordinate.x));
+                        Log.e("CORNERS Y", String.valueOf(coordinate.y));
+                    }
+
+//                    textureView.setImageBitmap(mutableBitmap);
+                    photo.recycle();
+                    photo = null;
+                    break;
+            }
+        }
+    }
     // createCameraPreview(). Sets up the targets for our capture request and initiates a capture
     // session.
     protected void createCameraPreview() {
