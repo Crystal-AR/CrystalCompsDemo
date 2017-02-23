@@ -286,6 +286,7 @@ public class ModelActivity extends AppCompatActivity {
 
                     // Find corners using a handler.
                     initiateCornerHandler();
+                    buffer.clear();
                 }
 
                 // TODO[mugazambis]
@@ -310,11 +311,14 @@ public class ModelActivity extends AppCompatActivity {
                 case CrystalAR.CORNERS_FOUND:
                     // Make bitmap mutable.
                     Bitmap workingBitmap = Bitmap.createBitmap(photo);
+                    photo.recycle();
                     Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+                    workingBitmap.recycle();
 
                     // Draw the image bitmap into the canvas.
                     Canvas c = new Canvas(mutableBitmap);
                     c.drawBitmap(mutableBitmap, 0, 0, null);
+                    mutableBitmap.recycle();
                     Paint p = new Paint();
                     p.setARGB(255,0,0,255);
                     p.setStyle(Paint.Style.STROKE);
@@ -328,7 +332,6 @@ public class ModelActivity extends AppCompatActivity {
                         Log.e("CORNERS Y", String.valueOf(coordinate.y));
                     }
 
-                    photo.recycle();
                     photo = null;
                     break;
             }
