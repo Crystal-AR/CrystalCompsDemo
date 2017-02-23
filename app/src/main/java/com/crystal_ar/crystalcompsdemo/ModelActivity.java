@@ -276,30 +276,17 @@ public class ModelActivity extends AppCompatActivity {
             @Override
             public void onImageAvailable(ImageReader reader) {
                 Image readImage = reader.acquireLatestImage();
-//                CrystalAR crystalAR;
-//                ImageView imageView;
 
-
-                if(readImage.getFormat() == ImageFormat.JPEG)
-                {
+                if(photo == null) {
                     ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
                     buffer.rewind();
                     byte[] jpegByteData = new byte[buffer.capacity()];
                     buffer.get(jpegByteData);
-                    Log.e("JpegByteData", String.valueOf(jpegByteData == null));
                     photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
-//                    initiateCornerHandlerL(textureView);
-                    Log.e("PHOTO", String.valueOf(photo == null));
 
-                    IntPair[] corners = crystalAR.findCorners(photo);
-                    for (IntPair coordinate : corners) {
-                        Log.e("CORNERS X", String.valueOf(coordinate.x));
-                        Log.e("CORNERS Y", String.valueOf(coordinate.y));
-                    }
-                    photo.recycle();
-                    photo = null;
+                    // Find corners using a handler.
+                    initiateCornerHandler();
                 }
-
 
                 // TODO[mugazambis]
                 // Find corners of image and do stuff.
@@ -309,18 +296,14 @@ public class ModelActivity extends AppCompatActivity {
             }
         };
 
-    public void initiateCornerHandlerL(TextureView textureView) {
-        Thread thread = new Thread(crystalAR.findCornersRunnable(new cornerHandlerL(textureView), photo));
+    public void initiateCornerHandler() {
+        Thread thread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(), photo));
         thread.setDaemon(true);
         thread.start();
     }
 
-    private class cornerHandlerL extends Handler {
-        TextureView textureView;
-
-        public cornerHandlerL(TextureView textureView) {
-            this.textureView = textureView;
-        }
+    private class cornerHandler extends Handler {
+        public cornerHandler() {}
         @Override
         public void handleMessage(Message message) {
             switch (message.what) {
@@ -345,7 +328,6 @@ public class ModelActivity extends AppCompatActivity {
                         Log.e("CORNERS Y", String.valueOf(coordinate.y));
                     }
 
-//                    textureView.setImageBitmap(mutableBitmap);
                     photo.recycle();
                     photo = null;
                     break;
