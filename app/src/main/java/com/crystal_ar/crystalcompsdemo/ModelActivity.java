@@ -90,6 +90,9 @@ public class ModelActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
     private Bitmap photo;
+    private Thread cornerThread;
+
+
     // Filenames for obj/awd files.
     // Do not include file extensions for awd files.
     // OBJ files do not have a file extension (convert .obj to _obj).
@@ -173,6 +176,11 @@ public class ModelActivity extends AppCompatActivity {
         rajSurface.setSurfaceRenderer(modelRenderer);
 
         creatListView();
+    }
+
+    protected void onStop() {
+        cornerThread.interrupt();
+        cornerThread = null;
     }
 
     // Setup surface texture listener.
@@ -278,15 +286,20 @@ public class ModelActivity extends AppCompatActivity {
                 Image readImage = reader.acquireLatestImage();
 
                 if(photo == null) {
+                    System.gc();
                     ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
                     buffer.rewind();
                     byte[] jpegByteData = new byte[buffer.capacity()];
                     buffer.get(jpegByteData);
+//                    BitmapFactory.Options options = new BitmapFactory.Options();
+//                    options.inMutable = true;
                     photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
 
                     // Find corners using a handler.
-                    initiateCornerHandler();
-                    buffer.clear();
+                    if (photo != null) {
+                        initiateCornerHandler();
+                    }
+//                    buffer.clear();
                 }
 
                 // TODO[mugazambis]
@@ -298,9 +311,10 @@ public class ModelActivity extends AppCompatActivity {
         };
 
     public void initiateCornerHandler() {
-        Thread thread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(), photo));
-        thread.setDaemon(true);
-        thread.start();
+        cornerThread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(), photo));
+        cornerThread.setDaemon(true);
+        cornerThread.start();
+//        mBackgroundHandler.post(crystalAR.findCornersRunnable(new cornerHandler(), photo));
     }
 
     private class cornerHandler extends Handler {
@@ -310,29 +324,32 @@ public class ModelActivity extends AppCompatActivity {
             switch (message.what) {
                 case CrystalAR.CORNERS_FOUND:
                     // Make bitmap mutable.
-                    Bitmap workingBitmap = Bitmap.createBitmap(photo);
-                    photo.recycle();
-                    Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
-                    workingBitmap.recycle();
+//                    Bitmap workingBitmap = Bitmap.createBitmap(photo);
+//                    Bitmap mutableBitmap = photo.copy(Bitmap.Config.ARGB_8888, true);
 
                     // Draw the image bitmap into the canvas.
                     // can we do this with Canvas()?
-                    Canvas c = new Canvas(mutableBitmap);
-                    c.drawBitmap(mutableBitmap, 0, 0, null);
-                    Paint p = new Paint();
-                    p.setARGB(255,0,0,255);
-                    p.setStyle(Paint.Style.STROKE);
-                    p.setStrokeWidth(3);
+//                    Canvas c = new Canvas(mutableBitmap);
+//                    c.drawBitmap(mutableBitmap, 0, 0, null);
+//                    Paint p = new Paint();
+//                    p.setARGB(255,0,0,255);
+//                    p.setStyle(Paint.Style.STROKE);
+//                    p.setStrokeWidth(3);
 
                     // Draw a blue dot at each corner.
+                    // message.obj = null if no corners were found.
                     IntPair[] corners = (IntPair[]) message.obj;
                     for (IntPair coordinate : corners) {
-                        c.drawPoint(coordinate.x, coordinate.y, p);
+//                        c.drawPoint(coordinate.x, coordinate.y, p);
                         Log.e("CORNERS X", String.valueOf(coordinate.x));
                         Log.e("CORNERS Y", String.valueOf(coordinate.y));
                     }
 
-                    mutableBitmap.recycle();
+                    photo.recycle();
+//                    workingBitmap.recycle();
+//                    mutableBitmap.recycle();
+                    // Try to force garbage collection.
+                    System.gc();
                     photo = null;
                     break;
             }
