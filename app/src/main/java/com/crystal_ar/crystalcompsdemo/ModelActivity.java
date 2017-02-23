@@ -316,9 +316,9 @@ public class ModelActivity extends AppCompatActivity {
                     workingBitmap.recycle();
 
                     // Draw the image bitmap into the canvas.
+                    // can we do this with Canvas()?
                     Canvas c = new Canvas(mutableBitmap);
                     c.drawBitmap(mutableBitmap, 0, 0, null);
-                    mutableBitmap.recycle();
                     Paint p = new Paint();
                     p.setARGB(255,0,0,255);
                     p.setStyle(Paint.Style.STROKE);
@@ -332,6 +332,7 @@ public class ModelActivity extends AppCompatActivity {
                         Log.e("CORNERS Y", String.valueOf(coordinate.y));
                     }
 
+                    mutableBitmap.recycle();
                     photo = null;
                     break;
             }
