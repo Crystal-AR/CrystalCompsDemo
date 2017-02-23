@@ -311,9 +311,9 @@ public class ModelActivity extends AppCompatActivity {
                 case CrystalAR.CORNERS_FOUND:
                     // Make bitmap mutable.
                     Bitmap workingBitmap = Bitmap.createBitmap(photo);
-                    photo.recycle();
+                    //photo.recycle();
                     Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
-                    workingBitmap.recycle();
+                    //workingBitmap.recycle();
 
                     // Draw the image bitmap into the canvas.
                     // can we do this with Canvas()?
@@ -333,6 +333,9 @@ public class ModelActivity extends AppCompatActivity {
                     }
 
                     mutableBitmap.recycle();
+                    workingBitmap.recycle();
+                    photo.recycle();
+                    System.gc();
                     photo = null;
                     break;
             }
