@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,6 +69,11 @@ public class CornerActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
                 photo = (Bitmap) data.getExtras().get("data");
+
+                // Rotate image.
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
             } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -121,6 +127,7 @@ public class CornerActivity extends AppCompatActivity {
                         c.drawPoint(coordinate.x, coordinate.y, p);
                     }
 
+                    workingBitmap.recycle();
                     imageView.setImageBitmap(mutableBitmap);
                     break;
             }
