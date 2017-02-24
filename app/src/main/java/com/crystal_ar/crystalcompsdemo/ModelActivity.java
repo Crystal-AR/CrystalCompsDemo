@@ -287,6 +287,7 @@ public class ModelActivity extends AppCompatActivity {
             public void onImageAvailable(ImageReader reader) {
                 Image readImage = reader.acquireLatestImage();
 
+                // Only find corners if we are done processing the frame we're currently at.
                 if(photo == null || photo.isRecycled()) {
                     ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
                     buffer.rewind();
@@ -338,6 +339,7 @@ public class ModelActivity extends AppCompatActivity {
             }
         }
     }
+
     // createCameraPreview(). Sets up the targets for our capture request and initiates a capture
     // session.
     protected void createCameraPreview() {
