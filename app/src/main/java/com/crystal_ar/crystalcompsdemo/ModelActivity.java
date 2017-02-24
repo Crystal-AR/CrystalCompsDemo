@@ -298,7 +298,6 @@ public class ModelActivity extends AppCompatActivity {
                     if (photo != null) {
                         initiateCornerHandler();
                     }
-//                    buffer.clear();
                 }
 
                 // Close image when done.
@@ -332,10 +331,9 @@ public class ModelActivity extends AppCompatActivity {
                     }
 
                     this.img.recycle();
-//                    photo.recycle();
+                    this.img = null;
                     // Try to force garbage collection.
-//                    System.gc();
-//                    photo = null;
+                    //System.gc();
                     break;
             }
         }
