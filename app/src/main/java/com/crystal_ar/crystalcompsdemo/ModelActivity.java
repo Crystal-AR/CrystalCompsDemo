@@ -20,6 +20,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -175,10 +176,11 @@ public class ModelActivity extends AppCompatActivity {
         this.modelRenderer = new ModelRenderer(this);
         rajSurface.setSurfaceRenderer(modelRenderer);
 
-        creatListView();
+        createListView();
     }
 
     protected void onStop() {
+        super.onStop();
         cornerThread.interrupt();
         cornerThread = null;
     }
@@ -285,14 +287,11 @@ public class ModelActivity extends AppCompatActivity {
             public void onImageAvailable(ImageReader reader) {
                 Image readImage = reader.acquireLatestImage();
 
-                if(photo == null) {
-                    System.gc();
+                if(photo == null || photo.isRecycled()) {
                     ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
                     buffer.rewind();
                     byte[] jpegByteData = new byte[buffer.capacity()];
                     buffer.get(jpegByteData);
-//                    BitmapFactory.Options options = new BitmapFactory.Options();
-//                    options.inMutable = true;
                     photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
 
                     // Find corners using a handler.
@@ -302,55 +301,41 @@ public class ModelActivity extends AppCompatActivity {
 //                    buffer.clear();
                 }
 
-                // TODO[mugazambis]
-                // Find corners of image and do stuff.
-
                 // Close image when done.
                 readImage.close();
             }
         };
 
     public void initiateCornerHandler() {
-        cornerThread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(), photo));
+        cornerThread = new Thread(crystalAR.findCornersRunnable(new cornerHandler(photo), photo));
         cornerThread.setDaemon(true);
         cornerThread.start();
-//        mBackgroundHandler.post(crystalAR.findCornersRunnable(new cornerHandler(), photo));
+        // Is is better to do it on the background thread?
+//        mBackgroundHandler.post(crystalAR.findCornersRunnable(new cornerHandler(photo), photo));
     }
 
     private class cornerHandler extends Handler {
-        public cornerHandler() {}
+        Bitmap img;
+
+        public cornerHandler(Bitmap img) {
+            this.img = img;
+        }
         @Override
         public void handleMessage(Message message) {
             switch (message.what) {
                 case CrystalAR.CORNERS_FOUND:
-                    // Make bitmap mutable.
-//                    Bitmap workingBitmap = Bitmap.createBitmap(photo);
-//                    Bitmap mutableBitmap = photo.copy(Bitmap.Config.ARGB_8888, true);
-
-                    // Draw the image bitmap into the canvas.
-                    // can we do this with Canvas()?
-//                    Canvas c = new Canvas(mutableBitmap);
-//                    c.drawBitmap(mutableBitmap, 0, 0, null);
-//                    Paint p = new Paint();
-//                    p.setARGB(255,0,0,255);
-//                    p.setStyle(Paint.Style.STROKE);
-//                    p.setStrokeWidth(3);
-
-                    // Draw a blue dot at each corner.
                     // message.obj = null if no corners were found.
                     IntPair[] corners = (IntPair[]) message.obj;
                     for (IntPair coordinate : corners) {
-//                        c.drawPoint(coordinate.x, coordinate.y, p);
                         Log.e("CORNERS X", String.valueOf(coordinate.x));
                         Log.e("CORNERS Y", String.valueOf(coordinate.y));
                     }
 
-                    photo.recycle();
-//                    workingBitmap.recycle();
-//                    mutableBitmap.recycle();
+                    this.img.recycle();
+//                    photo.recycle();
                     // Try to force garbage collection.
-                    System.gc();
-                    photo = null;
+//                    System.gc();
+//                    photo = null;
                     break;
             }
         }
@@ -370,6 +355,7 @@ public class ModelActivity extends AppCompatActivity {
             // bitmaps to display.
             captureRequestBuilder.addTarget(surface);
             cameraDevice.createCaptureSession(Arrays.asList(mImageSurface, surface), new CameraCaptureSession.StateCallback(){
+//            cameraDevice.createCaptureSession(Arrays.asList(mImageSurface), new CameraCaptureSession.StateCallback(){
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     // The camera is already closed.
@@ -455,7 +441,7 @@ public class ModelActivity extends AppCompatActivity {
     }
 
     // creatListView(). Adds the different models to the list view.
-    private void creatListView() {
+    private void createListView() {
         modelListView = (ListView) findViewById(R.id.modelList);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, modelNameList);
         modelListView.setAdapter(adapter);
