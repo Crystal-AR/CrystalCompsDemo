@@ -112,7 +112,6 @@ public class CornerActivity extends AppCompatActivity {
                     // Make bitmap mutable.
                     Bitmap workingBitmap = Bitmap.createBitmap(photo);
                     Bitmap mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
-                    workingBitmap.recycle();
 
                     // Draw the image bitmap into the canvas.
                     Canvas c = new Canvas(mutableBitmap);
@@ -128,6 +127,7 @@ public class CornerActivity extends AppCompatActivity {
                         c.drawPoint(coordinate.x, coordinate.y, p);
                     }
 
+                    workingBitmap.recycle();
                     imageView.setImageBitmap(mutableBitmap);
                     break;
             }
