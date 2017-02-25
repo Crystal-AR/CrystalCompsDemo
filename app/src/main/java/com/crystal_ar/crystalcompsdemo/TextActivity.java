@@ -208,6 +208,8 @@ public class TextActivity extends AppCompatActivity {
                 createURLRect(urls);
             }
         }
+        else
+            Log.d("Hello", "image empyu");
     }
 
     @Override
@@ -331,7 +333,6 @@ public class TextActivity extends AppCompatActivity {
 
     protected void replaceWithImg() {
         String[] replace = {"Email", "Contact"};
-
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.email);//assign your bitmap;
         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.phone);//assign your bitmap;
         Bitmap[] arrayOfBitmap = {bitmap1, bitmap2};
