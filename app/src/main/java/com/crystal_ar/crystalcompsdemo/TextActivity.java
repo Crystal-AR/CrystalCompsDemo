@@ -191,25 +191,27 @@ public class TextActivity extends AppCompatActivity {
 
     public void onCheckboxClicked(View view) {
         if(crystalAR.getWords()!=null) {
+            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
             if (replaceImageCheckBox.isChecked())
                 replaceWithImg();
             if (emailCheckBox.isChecked()) {
                 emails = crystalAR.getEmails();
                 createEmailsRect(emails);
             }
-
             if (phoneNumbersCheckBox.isChecked()) {
                 phoneNumbers = crystalAR.getPhoneNumbers();
                 createPhoneNosRect(phoneNumbers);
             }
-
             if (urlCheckBox.isChecked()) {
                 urls = crystalAR.getURLs();
                 createURLRect(urls);
             }
         }
-        else
-            Log.d("Hello", "image empyu");
+        imageView.post(new Runnable() {
+            public void run() {
+                imageView.setImageBitmap(tempPhoto);
+            }
+        });
     }
 
     @Override
@@ -292,8 +294,6 @@ public class TextActivity extends AppCompatActivity {
     }
 
     protected void createEmailsRect(List<Word> emails) {
-        Bitmap mutableBitmap = tempPhoto.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(mutableBitmap);
         Canvas c = new Canvas(tempPhoto);
         //Draw the image bitmap into the cavas
         c.drawBitmap(tempPhoto, 0, 0, null);
@@ -332,6 +332,7 @@ public class TextActivity extends AppCompatActivity {
     }
 
     protected void replaceWithImg() {
+        Log.d("Replace", "got here");
         String[] replace = {"Email", "Contact"};
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.email);//assign your bitmap;
         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.phone);//assign your bitmap;
