@@ -105,7 +105,6 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -164,20 +163,13 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            // Rotate image.
             //photo = (Bitmap) data.getExtras().get("data");
-            //Matrix matrix = new Matrix();
-            //matrix.postRotate(90);
-            //photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
 
             imageView.setImageBitmap(photo);
 
             crystalAR.processImage(photo);
 
             Word[] w = crystalAR.getWords();
-            for (Word i : w) {
-                Log.d("Word: ", i.str);
-            }
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
         }
 
@@ -225,18 +217,9 @@ public class TextActivity extends AppCompatActivity {
         y = y - 100;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 if (emails != null) {
                     for (int j = 0; j < emails.size(); j++) {
-//                        Log.d("left email X", Integer.toString(emails.get(j).x));
-//                        Log.d("Touch x", Float.toString(x));
-//                        Log.d("        right email X", Integer.toString(emails.get(j).x + emails.get(j).width));
-//                        Log.d("top email Y", Integer.toString(emails.get(j).y));
-//                        Log.d("Touch y", Float.toString(y));
-//                        Log.d("bottom email Y", Integer.toString(emails.get(j).y + emails.get(j).height));
-
                         if ((x + 170 > emails.get(j).x && x + 170 < emails.get(j).x + emails.get(j).width) && (y + 140 > emails.get(j).y && y + 140 < emails.get(j).y + emails.get(j).height)) {
-                            Log.d("awesome", "pants");
                             Intent intent = new Intent(Intent.ACTION_SENDTO);
                             intent.setType("text/plain");
                             intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
@@ -252,12 +235,6 @@ public class TextActivity extends AppCompatActivity {
                     for (int i = 0; i < urls.size(); i++) {
                         int xOffset = 170;
                         int yOffset = 130 - 120;
-                        Log.d("left url X", Integer.toString(urls.get(i).x));
-                        Log.d("Touch x", Float.toString(x + xOffset));
-                        Log.d("        right url X", Integer.toString(urls.get(i).x + urls.get(i).width));
-                        Log.d("top url Y", Integer.toString(urls.get(i).y));
-                        Log.d("Touch y", Float.toString(y + yOffset));
-                        Log.d("bottom url Y", Integer.toString(urls.get(i).y + urls.get(i).height));
 
                         //Check if the x and y position of the touch is inside the bitmap
                         if (x + xOffset > urls.get(i).x && x + xOffset < urls.get(i).x + urls.get(i).width && y + yOffset > urls.get(i).y && y + yOffset < urls.get(i).y + urls.get(i).height) {
@@ -271,27 +248,13 @@ public class TextActivity extends AppCompatActivity {
                     for (int k = 0; k < phoneNumbers.size(); k++) {
                         int xOffset = 50 + 220;
                         int yOffset = 150 - 80;
-//                        Log.d("left phone X", Integer.toString(phoneNumbers.get(k).x));
-//                        Log.d("Touch x", Float.toString(x + xOffset));
-//                        Log.d("        right phone X", Integer.toString(phoneNumbers.get(k).x + phoneNumbers.get(k).width));
-//                        Log.d("top phone Y", Integer.toString(phoneNumbers.get(k).y));
-//                        Log.d("Touch y", Float.toString(y + yOffset));
-//                        Log.d("bottom phone Y", Integer.toString(phoneNumbers.get(k).y + phoneNumbers.get(k).height));
-
 
                         if (x + xOffset > phoneNumbers.get(k).x && x + xOffset < phoneNumbers.get(k).x + phoneNumbers.get(k).width && y + yOffset > phoneNumbers.get(k).y && y + yOffset < phoneNumbers.get(k).y + phoneNumbers.get(k).height) {
 
                             Intent intent = new Intent(Intent.ACTION_CALL);
                             intent.setData(Uri.parse("tel:" + phoneNumbers.get(k).str));
                             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-                                //return TODO;
+                                //TODO[@abha, @josh, @simon] -- Ask the user for permission here.
                             }
                             startActivity(intent);
                         }
@@ -303,26 +266,6 @@ public class TextActivity extends AppCompatActivity {
                 return true;
         }
 
-/*
-        array = getEmails
-        loop through all rectangles
-        if touch event is within/ close rectangle
-        Make urk intent using corresponding word
-        */
-
-
-//        float x = event.getX();
-//        float y = event.getY();
-//        switch(event.getAction())
-//        {
-//            case MotionEvent.ACTION_DOWN:
-//                //Check if the x and y position of the touch is inside the bitmap
-//                if( x > bitmapXPosition && x < bitmapXPosition + bitmapWidth && y > bitmapYPosition && y < bitmapYPosition + bitmapHeight )
-//                {
-//                    //Bitmap touched
-//                }
-//                return true;
-//        }
         return false;
     }
 
