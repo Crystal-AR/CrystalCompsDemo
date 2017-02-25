@@ -198,24 +198,23 @@ public class TextActivity extends AppCompatActivity {
     }
 
     public void onCheckboxClicked(View view) {
-        if (replaceImageCheckBox.isChecked())
-            replaceWithImg();
-        if (emailCheckBox.isChecked())
-        {
-            emails = crystalAR.getEmails();
-            createEmailsRect(emails);
-        }
+        if(crystalAR.getWords()!=null) {
+            if (replaceImageCheckBox.isChecked())
+                replaceWithImg();
+            if (emailCheckBox.isChecked()) {
+                emails = crystalAR.getEmails();
+                createEmailsRect(emails);
+            }
 
-        if (phoneNumbersCheckBox.isChecked())
-        {
-            phoneNumbers = crystalAR.getPhoneNumbers();
-            createPhoneNosRect(phoneNumbers);
-        }
+            if (phoneNumbersCheckBox.isChecked()) {
+                phoneNumbers = crystalAR.getPhoneNumbers();
+                createPhoneNosRect(phoneNumbers);
+            }
 
-        if (urlCheckBox.isChecked())
-        {
-            urls = crystalAR.getURLs();
-            createURLRect(urls);
+            if (urlCheckBox.isChecked()) {
+                urls = crystalAR.getURLs();
+                createURLRect(urls);
+            }
         }
     }
 
