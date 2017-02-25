@@ -29,4 +29,5 @@ dependencies {
     compile project(':crystal-ar')
     testCompile 'junit:junit:4.12'
     compile 'org.rajawali3d:rajawali:1.0.186-SNAPSHOT@aar'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
