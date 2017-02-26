@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/debug/layout-v16/notification_template_custom_big.xml",
+        "source": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v16/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/res/merged/debug/layout-v16/notification_template_custom_big.xml",
+        "source": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v16/notification_template_custom_big.xml"
+    }
+]
