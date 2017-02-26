@@ -286,6 +286,7 @@ public class TextActivity extends AppCompatActivity {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 float top = imageView.getTop();
+                float left = imageView.getLeft();
 
                 if(emails != null) {
                     for (int i = 0; i < emails.size(); i++) {
@@ -311,10 +312,10 @@ public class TextActivity extends AppCompatActivity {
                 if(urls!= null) {
                     for (int i = 0; i < urls.size(); i++) {
                         Log.d("Scale factor", String.valueOf(scaleFactor));
-                        float leftUrlX = urls.get(i).x/scaleFactor;
-                        float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor;
-                        float topUrlY = urls.get(i).y/scaleFactor+top;
-                        float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top;
+                        float leftUrlX = urls.get(i).x/scaleFactor+left;
+                        float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor+left;
+                        float topUrlY = urls.get(i).y/scaleFactor+top + top;
+                        float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top+top;
 //
 //
 //                        Log.d("left url X", Float.toString(leftUrlX));
