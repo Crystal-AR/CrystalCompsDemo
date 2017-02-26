@@ -54,6 +54,12 @@ public class TextActivity extends AppCompatActivity {
     Boolean replaceImageChecked = false;
     Boolean emailChecked = false;
 
+    float origBitmapWidth;
+    float origBitmapHeight;
+    float scaledBitmapWidth;
+    float scaledBitmapHeight;
+    float origBitmapAspectRatio;
+    float scaleFactor;
 
     private ImageView imageView;
     private CrystalAR crystalAR;
@@ -79,9 +85,25 @@ public class TextActivity extends AppCompatActivity {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
+        photo = BitmapFactory.decodeResource(getResources(), R.drawable.test_url, opt);
+        origBitmapHeight = photo.getHeight();
+        origBitmapWidth = photo.getWidth();
 
-        this.imageView = (ImageView) this.findViewById(R.id.textImageView);
+        imageView = (ImageView) this.findViewById(R.id.textImageView);
+        imageView.setImageBitmap(photo);
+
+
+
+//        imageView.getLayoutParams().width = Math.round(scaledBitmapWidth);
+//        imageView.setMaxHeight(Math.round(scaledBitmapHeight));
+//            imageView.setMaxHeight(Math.round(scaledBitmapHeight));
+
+
+
+
+
+//        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
         emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
         urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
         phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
@@ -163,9 +185,31 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+//            photo = (Bitmap) data.getExtras().get("data");
+//            imageView.setImageBitmap(photo);
+            origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
+            Log.d("up here", String.valueOf(origBitmapAspectRatio));
+
+
+
+            scaledBitmapWidth= imageView.getWidth();
+            scaledBitmapHeight = imageView.getHeight();
+            Log.d("Orig", String.valueOf(origBitmapHeight));
+
+            Log.d("Scaled", String.valueOf(scaledBitmapHeight));
+
+            scaleFactor = origBitmapHeight / scaledBitmapHeight;
+
+            Log.d("IMPORTANT RATIO", String.valueOf(origBitmapAspectRatio));
+            Log.d("IMPORTANT WIDTH", String.valueOf(imageView.getWidth()));
+
+            Log.d("IMPORTANT HEIGHT", String.valueOf(origBitmapAspectRatio*imageView.getWidth()));
+            Log.d("Shitty HEIGHT", String.valueOf(scaledBitmapHeight));
+
+
             //photo = (Bitmap) data.getExtras().get("data");
 
-            imageView.setImageBitmap(photo);
+//            imageView.setImageBitmap(photo);
 
             crystalAR.processImage(photo);
 
@@ -214,49 +258,95 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         float x = event.getX();
         float y = event.getY();
-        y = y - 100;
+        float xRelativeDiff = imageView.getLeft();
+        float yRelativeDiff = imageView.getTop();
+//        float ximageViewDiff = (imageView.getHeight() - photo.getHeight()) /2;
+//        float yimageViewDiff =(imageView.getWidth() - photo.getWidth()) /2;
+//        x = x +xRelativeDiff ;
+//        y = y +yRelativeDiff;
+//        y = y - 100;
+        imageView.setBackgroundColor(Color.GREEN);
+        Log.d("imageView Height", String.valueOf(imageView.getHeight()));
+        Log.d("scaled Height", String.valueOf(scaledBitmapHeight));
+        Log.d("Imageviewtop", Float.toString(imageView.getTop()));
+        Log.d("Imageviewleft", Float.toString(imageView.getLeft()));
+        Log.d("imageviewbottom", Float.toString(imageView.getBottom()));
+        Log.d("imageviewright", Float.toString(imageView.getRight()));
+//        Log.d("screenTop", );
+//        Log.d("screenleft", Float.toString(imageView.getRight()));
+
+
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (emails != null) {
-                    for (int j = 0; j < emails.size(); j++) {
-                        if ((x + 170 > emails.get(j).x && x + 170 < emails.get(j).x + emails.get(j).width) && (y + 140 > emails.get(j).y && y + 140 < emails.get(j).y + emails.get(j).height)) {
+                float top = imageView.getTop();
+
+                if(emails != null) {
+                    for (int i = 0; i < emails.size(); i++) {
+                        float leftUrlX = emails.get(i).x/scaleFactor;
+                        float rightUrlX = emails.get(i).x /scaleFactor + emails.get(i).width/scaleFactor;
+                        float topUrlY = emails.get(i).y/scaleFactor+top;
+                        float bottomUrlY = emails.get(i).y/scaleFactor + emails.get(i).height+top;
+
+
+                        //Check if the x and y position of the touch is inside the bitmap
+                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
                             Intent intent = new Intent(Intent.ACTION_SENDTO);
                             intent.setType("text/plain");
                             intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
                             intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
-                            intent.setData(Uri.parse("mailto:" + Uri.parse(emails.get(j).str)));
+                            intent.setData(Uri.parse("mailto:" + Uri.parse(emails.get(i).str)));
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         }
 
                     }
                 }
-                if (urls != null) {
+                if(urls!= null) {
                     for (int i = 0; i < urls.size(); i++) {
-                        int xOffset = 170;
-                        int yOffset = 130 - 120;
+                        Log.d("Scale factor", String.valueOf(scaleFactor));
+                        float leftUrlX = urls.get(i).x/scaleFactor;
+                        float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor;
+                        float topUrlY = urls.get(i).y/scaleFactor+top;
+                        float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top;
+//
+//
+//                        Log.d("left url X", Float.toString(leftUrlX));
+//                        Log.d("Touch x", Float.toString(x));
+//                        Log.d("        right url X", Float.toString(rightUrlX));
+//                        Log.d("top url Y", Float.toString(topUrlY));
+//                        Log.d("Touch y", Float.toString(y));
+//                        Log.d("bottom url Y", Float.toString(bottomUrlY));
+//                        Log.d(" url ", urls.get(i).str);
 
                         //Check if the x and y position of the touch is inside the bitmap
-                        if (x + xOffset > urls.get(i).x && x + xOffset < urls.get(i).x + urls.get(i).width && y + yOffset > urls.get(i).y && y + yOffset < urls.get(i).y + urls.get(i).height) {
+                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
+                            Log.d(" url ", urls.get(i).str);
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(i).str));
                             startActivity(browserIntent);
                         }
 
                     }
                 }
-                if (phoneNumbers != null) {
-                    for (int k = 0; k < phoneNumbers.size(); k++) {
-                        int xOffset = 50 + 220;
-                        int yOffset = 150 - 80;
+                if(phoneNumbers != null) {
+                    for (int i = 0; i < phoneNumbers.size(); i++) {
+                        float leftUrlX = phoneNumbers.get(i).x/scaleFactor;
+                        float rightUrlX = phoneNumbers.get(i).x /scaleFactor + phoneNumbers.get(i).width/scaleFactor;
+                        float topUrlY = phoneNumbers.get(i).y/scaleFactor+top;
+                        float bottomUrlY = phoneNumbers.get(i).y/scaleFactor + phoneNumbers.get(i).height+top;
 
-                        if (x + xOffset > phoneNumbers.get(k).x && x + xOffset < phoneNumbers.get(k).x + phoneNumbers.get(k).width && y + yOffset > phoneNumbers.get(k).y && y + yOffset < phoneNumbers.get(k).y + phoneNumbers.get(k).height) {
+                        //Check if the x and y position of the touch is inside the bitmap
+                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
+                            Log.d("awesome", "phone");
 
                             Intent intent = new Intent(Intent.ACTION_CALL);
-                            intent.setData(Uri.parse("tel:" + phoneNumbers.get(k).str));
+                            intent.setData(Uri.parse("tel:" + phoneNumbers.get(i).str));
                             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                                 //TODO[@abha, @josh, @simon] -- Ask the user for permission here.
                             }

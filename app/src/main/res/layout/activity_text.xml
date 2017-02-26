@@ -1,49 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/activity_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:background="@drawable/background_c"
-                android:weightSum="100"
-                tools:context="com.crystal_ar.crystalcompsdemo.TextActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_text"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              android:background="@drawable/background_c"
+              tools:context="com.crystal_ar.crystalcompsdemo.TextActivity" android:weightSum="1">
 
     <ImageView
         android:id="@+id/textImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="40"
-/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_margin="0dp"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:weightSum="1">
     <CheckBox
         android:id="@+id/replaceImageCheckBox"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
         android:textColor="#FFFFFF"
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
         android:text="Replace w/ Img"
-        android:onClick="onCheckboxClicked"/>
+        android:onClick="onCheckboxClicked" android:layout_weight="0.43"/>
+
 
     <CheckBox
         android:id="@+id/urlCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
         android:textColor="#FFFFFF"
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
@@ -53,30 +49,27 @@
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:weightSum="1">
 
     <CheckBox
         android:id="@+id/phoneNumberCheckBox"
-        android:layout_width="89dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
         android:textColor="#FFFFFF"
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
         android:text="Phone Numbers"
-        android:onClick="onCheckboxClicked"/>
+        android:onClick="onCheckboxClicked" android:layout_weight="0.15"/>
 
 
         <CheckBox
         android:id="@+id/emailCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
         android:textColor="#FFFFFF"
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
@@ -86,9 +79,7 @@
 
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -96,7 +87,6 @@
         <Button android:id="@+id/BtnTakePhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
             android:background="#8000"
             android:textColor="#FFF"
             android:textSize="20dp"
@@ -106,7 +96,6 @@
             android:id="@+id/BtnLoadPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
             android:background="#8000"
             android:textColor="#FFF"
             android:textSize="20dp"

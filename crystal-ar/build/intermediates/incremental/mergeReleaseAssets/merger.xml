@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
+<merger version="3"><dataSet config="main"><source path="/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/src/main/assets"/><source path="/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/src/release/assets"/></dataSet></merger>
+=======
 <merger version="3"><dataSet config="main"><source path="/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/src/main/assets"/><source path="/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/src/release/assets"/></dataSet></merger>
+>>>>>>> master
