@@ -32,7 +32,9 @@
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:text="Replace w/ Img" android:layout_weight="0.53"/>
+        android:text="Replace w/ Img"
+        android:onClick="onCheckboxClicked"/>
+
 
     <CheckBox
         android:id="@+id/urlCheckBox"
@@ -42,7 +44,8 @@
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:text="URLs"/>
+        android:text="URLs"
+        android:onClick="onCheckboxClicked"/>
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,9 +62,11 @@
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:text="Phone Numbers" android:layout_weight="0.33"/>
+        android:text="Phone Numbers"
+        android:onClick="onCheckboxClicked"/>
 
-    <CheckBox
+
+        <CheckBox
         android:id="@+id/emailCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +74,9 @@
         android:buttonTint="#FFFFFF"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:text="Emails"/>
+        android:text="Emails"
+        android:onClick="onCheckboxClicked"/>
+
     </LinearLayout>
 
     <LinearLayout

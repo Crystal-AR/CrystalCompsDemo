@@ -1,6 +1,10 @@
 [
     {
+<<<<<<< HEAD
         "outputFile": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v22/values-v22.xml",
+=======
+        "outputFile": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v22/values-v22.xml",
+>>>>>>> master
         "map": [
             {
                 "to": {
@@ -11,7 +15,11 @@
                     "endOffset": 125
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +38,11 @@
                     "endOffset": 212
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -50,7 +62,11 @@
                     "endOffset": 548
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -71,6 +87,7 @@
                     "endOffset": 896
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
                     "position": {
                         "startLine": 9,
@@ -157,6 +174,9 @@
                 },
                 "from": {
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-v22/values-v22.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,

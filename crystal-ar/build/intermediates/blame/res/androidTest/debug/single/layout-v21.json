@@ -1,5 +1,6 @@
 [
     {
+<<<<<<< HEAD
         "merged": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_template_icon_group.xml",
         "source": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_template_icon_group.xml"
     },
@@ -30,5 +31,21 @@
     {
         "merged": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_action_tombstone.xml",
         "source": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_action_tombstone.xml"
+=======
+        "merged": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_action.xml",
+        "source": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/layout-v21/notification_template_custom_big.xml"
+>>>>>>> master
     }
 ]

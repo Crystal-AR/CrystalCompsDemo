@@ -1,6 +1,10 @@
 [
     {
+<<<<<<< HEAD
         "outputFile": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-land/values-land.xml",
+=======
+        "outputFile": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-land/values-land.xml",
+>>>>>>> master
         "map": [
             {
                 "to": {
@@ -11,7 +15,11 @@
                     "endOffset": 120
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +38,11 @@
                     "endOffset": 184
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +61,11 @@
                     "endOffset": 255
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -68,6 +84,7 @@
                     "endOffset": 323
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
                     "position": {
                         "startLine": 5,
@@ -150,6 +167,9 @@
                 },
                 "from": {
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-land/values-land.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,

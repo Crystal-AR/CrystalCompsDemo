@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,6 +32,10 @@ import android.widget.Toast;
 
 import com.crystal_ar.crystal_ar.CrystalAR;
 import com.crystal_ar.crystal_ar.Word;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.List;
 
@@ -66,6 +71,11 @@ public class TextActivity extends AppCompatActivity {
     private List<Word> urls;
     private List<Word> phoneNumbers;
     private List<Word> emails;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -94,7 +104,6 @@ public class TextActivity extends AppCompatActivity {
 
 //        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-
         emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
         urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
         phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
@@ -108,7 +117,7 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
@@ -118,10 +127,9 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
@@ -170,6 +178,9 @@ public class TextActivity extends AppCompatActivity {
                 }
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,26 +207,17 @@ public class TextActivity extends AppCompatActivity {
             Log.d("Shitty HEIGHT", String.valueOf(scaledBitmapHeight));
 
 
+            //photo = (Bitmap) data.getExtras().get("data");
+
+//            imageView.setImageBitmap(photo);
 
             crystalAR.processImage(photo);
 
+            Word[] w = crystalAR.getWords();
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
-            if (urlChecked == true) {
-                urls = crystalAR.getURLs();
-                createURLRect(urls);
-            }
+        }
 
-            if (phoneChecked == true) {
-                phoneNumbers = crystalAR.getPhoneNumbers();
-                createPhoneNosRect(phoneNumbers);
-            }
-
-            if (emailChecked == true) {
-                emails = crystalAR.getEmails();
-                createEmailsRect(emails);
-            }
-
-        } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -228,14 +230,32 @@ public class TextActivity extends AppCompatActivity {
             cursor.close();
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
-            if (urlChecked == true)
-                createURLRect(crystalAR.getURLs());
-            if (phoneChecked == true)
-                createPhoneNosRect(crystalAR.getPhoneNumbers());
-            if (emailChecked == true)
-                createEmailsRect(crystalAR.getEmails());
-
         }
+    }
+
+    public void onCheckboxClicked(View view) {
+        if(crystalAR.getWords()!=null) {
+            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
+            if (replaceImageCheckBox.isChecked())
+                replaceWithImg();
+            if (emailCheckBox.isChecked()) {
+                emails = crystalAR.getEmails();
+                createEmailsRect(emails);
+            }
+            if (phoneNumbersCheckBox.isChecked()) {
+                phoneNumbers = crystalAR.getPhoneNumbers();
+                createPhoneNosRect(phoneNumbers);
+            }
+            if (urlCheckBox.isChecked()) {
+                urls = crystalAR.getURLs();
+                createURLRect(urls);
+            }
+        }
+        imageView.post(new Runnable() {
+            public void run() {
+                imageView.setImageBitmap(tempPhoto);
+            }
+        });
     }
 
 
@@ -265,7 +285,6 @@ public class TextActivity extends AppCompatActivity {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 float top = imageView.getTop();
 
                 if(emails != null) {
@@ -289,7 +308,6 @@ public class TextActivity extends AppCompatActivity {
 
                     }
                 }
-
                 if(urls!= null) {
                     for (int i = 0; i < urls.size(); i++) {
                         Log.d("Scale factor", String.valueOf(scaleFactor));
@@ -306,7 +324,6 @@ public class TextActivity extends AppCompatActivity {
 //                        Log.d("Touch y", Float.toString(y));
 //                        Log.d("bottom url Y", Float.toString(bottomUrlY));
 //                        Log.d(" url ", urls.get(i).str);
-
 
                         //Check if the x and y position of the touch is inside the bitmap
                         if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
@@ -331,14 +348,7 @@ public class TextActivity extends AppCompatActivity {
                             Intent intent = new Intent(Intent.ACTION_CALL);
                             intent.setData(Uri.parse("tel:" + phoneNumbers.get(i).str));
                             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-                                //return TODO;
+                                //TODO[@abha, @josh, @simon] -- Ask the user for permission here.
                             }
                             startActivity(intent);
                         }
@@ -350,26 +360,6 @@ public class TextActivity extends AppCompatActivity {
                 return true;
         }
 
-/*
-        array = getEmails
-        loop through all rectangles
-        if touch event is within/ close rectangle
-        Make urk intent using corresponding word
-        */
-
-
-//        float x = event.getX();
-//        float y = event.getY();
-//        switch(event.getAction())
-//        {
-//            case MotionEvent.ACTION_DOWN:
-//                //Check if the x and y position of the touch is inside the bitmap
-//                if( x > bitmapXPosition && x < bitmapXPosition + bitmapWidth && y > bitmapYPosition && y < bitmapYPosition + bitmapHeight )
-//                {
-//                    //Bitmap touched
-//                }
-//                return true;
-//        }
         return false;
     }
 
@@ -394,8 +384,6 @@ public class TextActivity extends AppCompatActivity {
     }
 
     protected void createEmailsRect(List<Word> emails) {
-        Bitmap mutableBitmap = tempPhoto.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(mutableBitmap);
         Canvas c = new Canvas(tempPhoto);
         //Draw the image bitmap into the cavas
         c.drawBitmap(tempPhoto, 0, 0, null);
@@ -424,7 +412,7 @@ public class TextActivity extends AppCompatActivity {
         p.setStrokeWidth(3);
 
         for (Word no : phoneNos) {
-            c.drawRect(new Rect(no.x - 5, no.y - 5, no.x + no.width + 5, no.y + no.height), p);
+            c.drawRect(new Rect(no.x, no.y - 5, no.x + no.width + 5, no.y + no.height), p);
         }
         imageView.post(new Runnable() {
             public void run() {
@@ -433,12 +421,11 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
-    protected void replaceWithImg()
-    {
-        String[] replace= {"Email", "Contact"};
-
-        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(),R.drawable.email);//assign your bitmap;
-        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(),R.drawable.phone);//assign your bitmap;
+    protected void replaceWithImg() {
+        Log.d("Replace", "got here");
+        String[] replace = {"Email", "Contact"};
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.email);//assign your bitmap;
+        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.phone);//assign your bitmap;
         Bitmap[] arrayOfBitmap = {bitmap1, bitmap2};
         tempPhoto = crystalAR.replaceWithImage(tempPhoto, replace, arrayOfBitmap);
         imageView.post(new Runnable() {
@@ -448,5 +435,40 @@ public class TextActivity extends AppCompatActivity {
         });
 
     }
-}
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Text Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+}

@@ -1,6 +1,10 @@
 [
     {
+<<<<<<< HEAD
         "outputFile": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+        "outputFile": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
         "map": [
             {
                 "to": {
@@ -11,7 +15,11 @@
                     "endOffset": 119
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +38,11 @@
                     "endOffset": 188
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +61,11 @@
                     "endOffset": 258
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -68,7 +84,11 @@
                     "endOffset": 332
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -87,7 +107,11 @@
                     "endOffset": 408
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -106,7 +130,11 @@
                     "endOffset": 467
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -125,7 +153,11 @@
                     "endOffset": 538
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -144,6 +176,7 @@
                     "endOffset": 606
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/simonorlovsky/Code/cs/comps-demo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
                     "position": {
                         "startLine": 9,
@@ -302,6 +335,9 @@
                 },
                 "from": {
                     "file": "/Users/simonorlovsky/Code/cs/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+=======
+                    "file": "/Users/Sabastian/Desktop/Class/COMPS/CrystalCompsDemo/crystal-ar/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+>>>>>>> master
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
