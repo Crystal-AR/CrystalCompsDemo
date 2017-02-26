@@ -75,7 +75,7 @@ public class TextActivity extends AppCompatActivity {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
+        photo = BitmapFactory.decodeResource(getResources(), R.drawable.test_url, opt);
         origBitmapHeight = photo.getHeight();
         origBitmapWidth = photo.getWidth();
 
