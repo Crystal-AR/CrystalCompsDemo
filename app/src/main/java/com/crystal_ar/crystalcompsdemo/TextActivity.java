@@ -185,8 +185,8 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-//            photo = (Bitmap) data.getExtras().get("data");
-//            imageView.setImageBitmap(photo);
+            photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
             origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
             Log.d("up here", String.valueOf(origBitmapAspectRatio));
 
@@ -194,22 +194,11 @@ public class TextActivity extends AppCompatActivity {
 
             scaledBitmapWidth= imageView.getWidth();
             scaledBitmapHeight = imageView.getHeight();
-            Log.d("Orig", String.valueOf(origBitmapHeight));
-
-            Log.d("Scaled", String.valueOf(scaledBitmapHeight));
-
             scaleFactor = origBitmapHeight / scaledBitmapHeight;
 
-            Log.d("IMPORTANT RATIO", String.valueOf(origBitmapAspectRatio));
-            Log.d("IMPORTANT WIDTH", String.valueOf(imageView.getWidth()));
+            photo = (Bitmap) data.getExtras().get("data");
 
-            Log.d("IMPORTANT HEIGHT", String.valueOf(origBitmapAspectRatio*imageView.getWidth()));
-            Log.d("Shitty HEIGHT", String.valueOf(scaledBitmapHeight));
-
-
-            //photo = (Bitmap) data.getExtras().get("data");
-
-//            imageView.setImageBitmap(photo);
+            imageView.setImageBitmap(photo);
 
             crystalAR.processImage(photo);
 
@@ -266,22 +255,8 @@ public class TextActivity extends AppCompatActivity {
         float y = event.getY();
         float xRelativeDiff = imageView.getLeft();
         float yRelativeDiff = imageView.getTop();
-//        float ximageViewDiff = (imageView.getHeight() - photo.getHeight()) /2;
-//        float yimageViewDiff =(imageView.getWidth() - photo.getWidth()) /2;
-//        x = x +xRelativeDiff ;
-//        y = y +yRelativeDiff;
-//        y = y - 100;
+
         imageView.setBackgroundColor(Color.GREEN);
-        Log.d("imageView Height", String.valueOf(imageView.getHeight()));
-        Log.d("scaled Height", String.valueOf(scaledBitmapHeight));
-        Log.d("Imageviewtop", Float.toString(imageView.getTop()));
-        Log.d("Imageviewleft", Float.toString(imageView.getLeft()));
-        Log.d("imageviewbottom", Float.toString(imageView.getBottom()));
-        Log.d("imageviewright", Float.toString(imageView.getRight()));
-//        Log.d("screenTop", );
-//        Log.d("screenleft", Float.toString(imageView.getRight()));
-
-
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -323,15 +298,6 @@ public class TextActivity extends AppCompatActivity {
                             Word w = new Word(str, r);
                             urls.set(i, w);
                         }
-//
-//
-//                        Log.d("left url X", Float.toString(leftUrlX));
-//                        Log.d("Touch x", Float.toString(x));
-//                        Log.d("        right url X", Float.toString(rightUrlX));
-//                        Log.d("top url Y", Float.toString(topUrlY));
-//                        Log.d("Touch y", Float.toString(y));
-//                        Log.d("bottom url Y", Float.toString(bottomUrlY));
-//                        Log.d(" url ", urls.get(i).str);
 
                         //Check if the x and y position of the touch is inside the bitmap
                         if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
@@ -351,8 +317,6 @@ public class TextActivity extends AppCompatActivity {
 
                         //Check if the x and y position of the touch is inside the bitmap
                         if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
-                            Log.d("awesome", "phone");
-
                             Intent intent = new Intent(Intent.ACTION_CALL);
                             intent.setData(Uri.parse("tel:" + phoneNumbers.get(i).str));
                             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
