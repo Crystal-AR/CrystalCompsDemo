@@ -70,10 +70,10 @@ public class CornerActivity extends AppCompatActivity {
             if (requestCode == CAMERA_REQUEST) {
                 photo = (Bitmap) data.getExtras().get("data");
 
-                // Rotate image.
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
+//                // Rotate image.
+//                Matrix matrix = new Matrix();
+//                matrix.postRotate(90);
+//                photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
             } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};

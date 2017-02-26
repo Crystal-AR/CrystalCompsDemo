@@ -92,6 +92,7 @@ public class ModelActivity extends AppCompatActivity {
     private HandlerThread mBackgroundThread;
     private Bitmap photo;
     private Thread cornerThread;
+    private TableView tableView;
 
 
     // Filenames for obj/awd files.
@@ -143,6 +144,7 @@ public class ModelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_model);
         crystalAR = new CrystalAR(getApplicationContext());
 
+        this.tableView = (TableView) findViewById(R.id.tableView);
         this.clickText = (TextView) findViewById(R.id.cornerOverlayText);
 
         // Setup click and surface texture listeners for texture view.
@@ -325,11 +327,7 @@ public class ModelActivity extends AppCompatActivity {
             switch (message.what) {
                 case CrystalAR.CORNERS_FOUND:
                     // message.obj = null if no corners were found.
-                    IntPair[] corners = (IntPair[]) message.obj;
-                    for (IntPair coordinate : corners) {
-                        Log.e("CORNERS X", String.valueOf(coordinate.x));
-                        Log.e("CORNERS Y", String.valueOf(coordinate.y));
-                    }
+                    tableView.drawCorners((IntPair[]) message.obj, photo.getWidth(), photo.getHeight());
 
                     this.img.recycle();
                     this.img = null;
