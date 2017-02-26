@@ -90,7 +90,7 @@ public class TextActivity extends AppCompatActivity {
         origBitmapWidth = photo.getWidth();
 
         imageView = (ImageView) this.findViewById(R.id.textImageView);
-        imageView.setImageBitmap(photo);
+        //imageView.setImageBitmap(photo);
 
 
 
@@ -185,8 +185,8 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
+            //photo = (Bitmap) data.getExtras().get("data");
+            //imageView.setImageBitmap(photo);
             origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
             Log.d("up here", String.valueOf(origBitmapAspectRatio));
 
@@ -196,7 +196,7 @@ public class TextActivity extends AppCompatActivity {
             scaledBitmapHeight = imageView.getHeight();
             scaleFactor = origBitmapHeight / scaledBitmapHeight;
 
-            photo = (Bitmap) data.getExtras().get("data");
+            //photo = (Bitmap) data.getExtras().get("data");
 
             imageView.setImageBitmap(photo);
 
@@ -217,7 +217,7 @@ public class TextActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
         }
     }
