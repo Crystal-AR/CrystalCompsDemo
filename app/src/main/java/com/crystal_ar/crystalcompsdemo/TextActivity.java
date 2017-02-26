@@ -85,7 +85,7 @@ public class TextActivity extends AppCompatActivity {
 
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.test_url, opt);
+        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
         origBitmapHeight = photo.getHeight();
         origBitmapWidth = photo.getWidth();
 
@@ -316,6 +316,13 @@ public class TextActivity extends AppCompatActivity {
                         float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor+left;
                         float topUrlY = urls.get(i).y/scaleFactor+top + top;
                         float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top+top;
+
+                        if(!urls.get(i).str.substring(0,3).equals("ht")) {
+                            Rect r = new Rect(urls.get(i).x, urls.get(i).y, urls.get(i).width, urls.get(i).height);
+                            String str = "http://" + urls.get(i).str;
+                            Word w = new Word(str, r);
+                            urls.set(i, w);
+                        }
 //
 //
 //                        Log.d("left url X", Float.toString(leftUrlX));
