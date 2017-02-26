@@ -66,8 +66,9 @@ public class TableView extends SurfaceView {
             if (canvas != null) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 for (IntPair corner : corners) {
-                    transformedX = (float)corner.x / photoWidth;
-                    transformedY = (float)corner.y / photoHeight;
+                    transformedX = (float)corner.x / photoWidth; // percentage in x direction.
+                    transformedY = (float)corner.y / photoHeight; // percentage in y direction.
+                    // Do simple percentage mapping onto the view.
                     canvas.drawPoint(Math.round(transformedX * viewWidth), Math.round(transformedY * viewHeight), paint);
                 }
             }
