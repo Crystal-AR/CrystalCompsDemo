@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CrystalCompsDemo.iml" filepath="$PROJECT_DIR$/CrystalCompsDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/comps-demo.iml" filepath="$PROJECT_DIR$/comps-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/crystal-ar/crystal-ar.iml" filepath="$PROJECT_DIR$/crystal-ar/crystal-ar.iml" />
     </modules>
   </component>
