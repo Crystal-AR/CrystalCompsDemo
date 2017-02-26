@@ -33,7 +33,7 @@
         android:textStyle="bold"
         android:textSize="16dp"
         android:text="Replace w/ Img"
-        android:onClick="onCheckboxClicked"/>
+        android:onClick="onCheckboxClicked" android:layout_weight="0.43"/>
 
 
     <CheckBox
@@ -63,7 +63,7 @@
         android:textStyle="bold"
         android:textSize="16dp"
         android:text="Phone Numbers"
-        android:onClick="onCheckboxClicked"/>
+        android:onClick="onCheckboxClicked" android:layout_weight="0.15"/>
 
 
         <CheckBox
