@@ -327,7 +327,7 @@ public class ModelActivity extends AppCompatActivity {
             switch (message.what) {
                 case CrystalAR.CORNERS_FOUND:
                     // message.obj = null if no corners were found.
-                    tableView.drawCorners((IntPair[]) message.obj, photo.getWidth(), photo.getHeight());
+                    tableView.drawCorners((IntPair[]) message.obj, this.img.getWidth(), this.img.getHeight());
 
                     this.img.recycle();
                     this.img = null;
