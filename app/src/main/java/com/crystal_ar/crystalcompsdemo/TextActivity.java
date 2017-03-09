@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.Range;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -83,27 +84,12 @@ public class TextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
 
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
-        origBitmapHeight = photo.getHeight();
-        origBitmapWidth = photo.getWidth();
+
+//        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
+//        origBitmapHeight = photo.getHeight();
+//        origBitmapWidth = photo.getWidth();
 
         imageView = (ImageView) this.findViewById(R.id.textImageView);
-        //imageView.setImageBitmap(photo);
-
-
-
-//        imageView.getLayoutParams().width = Math.round(scaledBitmapWidth);
-//        imageView.setMaxHeight(Math.round(scaledBitmapHeight));
-//            imageView.setMaxHeight(Math.round(scaledBitmapHeight));
-
-
-
-
-
-//        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-
         emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
         urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
         phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
@@ -185,22 +171,33 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            //photo = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(photo);
+
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inMutable = true;
+
+//            photo = BitmapFactory.decodeFile(picturePath, opt);
+//            BitmapFactory.decodeResource(
+//
+
+            photo = (Bitmap) data.getExtras().get("data");
+
+            Bitmap copiedPhoto = photo.copy(Bitmap.Config.ARGB_8888, true);
+
+            origBitmapHeight = photo.getHeight();
+            origBitmapWidth = photo.getWidth();
+
             origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
-            Log.d("up here", String.valueOf(origBitmapAspectRatio));
 
-
+            Log.d("Width", String.valueOf(imageView.getWidth()));
+            Log.d("Height", String.valueOf(imageView.getHeight()));
 
             scaledBitmapWidth= imageView.getWidth();
             scaledBitmapHeight = imageView.getHeight();
+            Log.d("imageview height", String.valueOf(imageView.getHeight()));
             scaleFactor = origBitmapHeight / scaledBitmapHeight;
 
-            //photo = (Bitmap) data.getExtras().get("data");
-
-            imageView.setImageBitmap(photo);
-
-            crystalAR.processImage(photo);
+            imageView.setImageBitmap(copiedPhoto);
+            crystalAR.processImage(copiedPhoto);
 
             Word[] w = crystalAR.getWords();
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
@@ -217,7 +214,32 @@ public class TextActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inMutable = true;
+            //   photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
+
+            photo = BitmapFactory.decodeFile(picturePath, opt);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            origBitmapHeight = photo.getHeight();
+            origBitmapWidth = photo.getWidth();
+
+            origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
+
+            Log.d("Width", String.valueOf(imageView.getWidth()));
+            Log.d("Height", String.valueOf(imageView.getHeight()));
+
+            scaledBitmapWidth= imageView.getWidth();
+            scaledBitmapHeight = imageView.getHeight();
+            Log.d("imageview height", String.valueOf(imageView.getHeight()));
+            scaleFactor = origBitmapHeight / scaledBitmapHeight;
+
+            imageView.setImageBitmap(photo);
+            crystalAR.processImage(photo);
+
+            Word[] w = crystalAR.getWords();
+
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
         }
     }
@@ -263,6 +285,7 @@ public class TextActivity extends AppCompatActivity {
                 float top = imageView.getTop();
                 float left = imageView.getLeft();
 
+
                 if(emails != null) {
                     for (int i = 0; i < emails.size(); i++) {
                         float leftUrlX = emails.get(i).x/scaleFactor;
@@ -286,11 +309,21 @@ public class TextActivity extends AppCompatActivity {
                 }
                 if(urls!= null) {
                     for (int i = 0; i < urls.size(); i++) {
+
+
                         Log.d("Scale factor", String.valueOf(scaleFactor));
                         float leftUrlX = urls.get(i).x/scaleFactor+left;
-                        float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor+left;
-                        float topUrlY = urls.get(i).y/scaleFactor+top + top;
+                        float rightUrlX = urls.get(i).x/scaleFactor + urls.get(i).width/scaleFactor+left;
+                        float topUrlY = urls.get(i).y/scaleFactor+top+top;
                         float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top+top;
+                        Log.d("is this negative", String.valueOf(urls.get(i).height));
+
+                        Log.d("left url X", String.valueOf(leftUrlX));
+                        Log.d("Touch x", Float.toString(x));
+                        Log.d("        right url X", String.valueOf(rightUrlX));
+                        Log.d("top url Y", Float.toString(topUrlY));
+                        Log.d("Touch y", Float.toString(y));
+                        Log.d("bottom url Y", Float.toString(bottomUrlY));
 
                         if(!urls.get(i).str.substring(0,3).equals("ht")) {
                             Rect r = new Rect(urls.get(i).x, urls.get(i).y, urls.get(i).width, urls.get(i).height);
