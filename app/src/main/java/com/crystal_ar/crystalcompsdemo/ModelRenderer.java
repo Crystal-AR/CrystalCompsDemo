@@ -1,9 +1,13 @@
 package com.crystal_ar.crystalcompsdemo;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import org.rajawali3d.Camera;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderAWD;
@@ -17,15 +21,22 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.RajawaliRenderer;
 
 import java.security.InvalidParameterException;
+import java.util.Vector;
 
 /**
  * Created by Frederik on 2/16/17.
  */
 
-public class ModelRenderer extends RajawaliRenderer {
+public class ModelRenderer extends RajawaliRenderer implements SensorEventListener {
 
     private DirectionalLight directionalLight;
     private Object3D model;
+    private double rotX, rotY,rotZ, camX, camY, camZ;
+    private Vector3 pos;
+    private Vector3 mAccVals = new Vector3();
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
 
     public ModelRenderer(Context context) {
         super(context);
@@ -36,7 +47,27 @@ public class ModelRenderer extends RajawaliRenderer {
         directionalLight = new DirectionalLight(1f, .2f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
-        getCurrentCamera().setZ(15f);
+        Camera mCamera = new Camera();
+        mCamera.setPosition(0, 0, 0);
+//        getCurrentCamera().setZ(15f);
+        getCurrentScene().addCamera(mCamera);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    public void setRotations(Vector3 angles, Vector3 trans, Vector3 actual){
+        this.rotX = angles.x;
+        this.rotY = angles.y;
+        this.rotZ = angles.z;
+        this.camX = trans.x;
+        this.camY = trans.y;
+        this.camZ = trans.z;
+        this.pos = actual;
+
+        Log.e("ROTATION x" , String.valueOf(rotX));
+        Log.e("ROT  Y" , String.valueOf(rotY));
+        Log.e("ROT  Z" , String.valueOf(rotZ));
+
+
     }
 
     public void renderModel(Integer modelID, Integer texture, String type) {
@@ -50,6 +81,10 @@ public class ModelRenderer extends RajawaliRenderer {
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
+
+        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mAccVals = new Number3d();
 
         // Only add texture if the model has one.
         if (texture != null) {
@@ -86,6 +121,7 @@ public class ModelRenderer extends RajawaliRenderer {
         }
 
         model.setMaterial(material);
+
         getCurrentScene().addChild(model);
     }
 
@@ -102,7 +138,39 @@ public class ModelRenderer extends RajawaliRenderer {
         super.onRender(elapsedTime, deltaTime);
         // Rotate object.
         if (model != null) {
-            model.rotate(Vector3.Axis.Y, 1.0);
+            //model.rotate(Vector3.Axis.Y, 1.0);
+
+//            Log.e("COODINATE X" , String.valueOf(getCurrentCamera().getX()));
+//            Log.e("COODINATE  Y" , String.valueOf(getCurrentCamera().getY()));
+//            Log.e("COODINATE  Z" , String.valueOf(getCurrentCamera().getZ()));
+
+//            pos.rotateX(Math.toRadians(rotX));
+//            pos.rotateY(Math.toRadians(rotY));
+//            pos.rotateZ(Math.toRadians(rotZ));
+
+//            getCurrentCamera().setZ(pos.z);
+//            getCurrentCamera().setX(pos.x);
+//            getCurrentCamera().setY(pos.y);
+//
+
+//            model.setRotX(Math.toRadians(rotX));
+//            model.setRotY(Math.toRadians(rotY));
+//            model.setRotZ(Math.toRadians(rotZ));
+
+
+
+            double X = getCurrentCamera().getX() + camX/10;
+            double Y = getCurrentCamera().getY() + camY/10;
+            double Z = getCurrentCamera().getZ() + camZ/10;
+
+//
+
+            getCurrentCamera().setX(X);
+            getCurrentCamera().setY(Y);
+            getCurrentCamera().setZ(Z);
+
+            getCurrentCamera().enableLookAt();
+            //getCurrentCamera().setLookAt(0.0,0.0,0.0);
         }
     }
 
