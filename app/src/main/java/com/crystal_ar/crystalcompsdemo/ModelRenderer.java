@@ -34,7 +34,7 @@ public class ModelRenderer extends RajawaliRenderer {
 
     private DirectionalLight directionalLight;
     private Object3D model;
-    private double rotX, rotY,rotZ, camX, camY, camZ;
+    private double rotX, rotY, rotZ, camX, camY, camZ;
 
     public ModelRenderer(Context context) {
         super(context);
