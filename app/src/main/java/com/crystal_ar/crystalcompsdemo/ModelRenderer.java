@@ -2,6 +2,7 @@ package com.crystal_ar.crystalcompsdemo;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
@@ -23,20 +24,17 @@ import org.rajawali3d.renderer.RajawaliRenderer;
 import java.security.InvalidParameterException;
 import java.util.Vector;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Frederik on 2/16/17.
  */
 
-public class ModelRenderer extends RajawaliRenderer implements SensorEventListener {
+public class ModelRenderer extends RajawaliRenderer {
 
     private DirectionalLight directionalLight;
     private Object3D model;
     private double rotX, rotY,rotZ, camX, camY, camZ;
-    private Vector3 pos;
-    private Vector3 mAccVals = new Vector3();
-
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
 
     public ModelRenderer(Context context) {
         super(context);
@@ -47,11 +45,10 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
         directionalLight = new DirectionalLight(1f, .2f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
-        Camera mCamera = new Camera();
-        mCamera.setPosition(0, 0, 0);
-//        getCurrentCamera().setZ(15f);
-        getCurrentScene().addCamera(mCamera);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        getCurrentCamera().setZ(5f);
+        //getCurrentCamera().setPosition(0, 0, 0);
+
+
     }
 
     public void setRotations(Vector3 angles, Vector3 trans, Vector3 actual){
@@ -61,11 +58,13 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
         this.camX = trans.x;
         this.camY = trans.y;
         this.camZ = trans.z;
-        this.pos = actual;
+//        this.camX = actual.x;
+//        this.camY = actual.y;
+//        this.camZ = actual.z;
 
-        Log.e("ROTATION x" , String.valueOf(rotX));
-        Log.e("ROT  Y" , String.valueOf(rotY));
-        Log.e("ROT  Z" , String.valueOf(rotZ));
+//        Log.e("ROTATION x" , String.valueOf(rotX));
+//        Log.e("ROT  Y" , String.valueOf(rotY));
+//        Log.e("ROT  Z" , String.valueOf(rotZ));
 
 
     }
@@ -81,10 +80,6 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
         material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
-
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mAccVals = new Number3d();
 
         // Only add texture if the model has one.
         if (texture != null) {
@@ -121,16 +116,14 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
         }
 
         model.setMaterial(material);
-
         getCurrentScene().addChild(model);
     }
+
+
 
     public void setPosition(Double x, Double y, Double z) {
         // These are coordinates for the virtual world.
         model.setPosition(x, y, z);
-
-//        // These are coordinates for the "real" world.
-//        model.setScreenCoordinates(1.0, 1.0, getViewportWidth(), getViewportHeight(), 1.0);
     }
 
     @Override
@@ -138,11 +131,13 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
         super.onRender(elapsedTime, deltaTime);
         // Rotate object.
         if (model != null) {
-            //model.rotate(Vector3.Axis.Y, 1.0);
+            //model.rotate(Vector3.Axis.X, -Math.toRadians(rotX));
+            //model.rotate(Vector3.Axis.Y, -Math.toRadians(rotY));
+            //model.rotate(Vector3.Axis.Z, -Math.toRadians(rotZ));
 
-//            Log.e("COODINATE X" , String.valueOf(getCurrentCamera().getX()));
-//            Log.e("COODINATE  Y" , String.valueOf(getCurrentCamera().getY()));
-//            Log.e("COODINATE  Z" , String.valueOf(getCurrentCamera().getZ()));
+            Log.e("COODINATE X" , String.valueOf(getCurrentCamera().getX()));
+            Log.e("COODINATE  Y" , String.valueOf(getCurrentCamera().getY()));
+            Log.e("COODINATE  Z" , String.valueOf(getCurrentCamera().getZ()));
 
 //            pos.rotateX(Math.toRadians(rotX));
 //            pos.rotateY(Math.toRadians(rotY));
@@ -158,19 +153,18 @@ public class ModelRenderer extends RajawaliRenderer implements SensorEventListen
 //            model.setRotZ(Math.toRadians(rotZ));
 
 
-
             double X = getCurrentCamera().getX() + camX/10;
             double Y = getCurrentCamera().getY() + camY/10;
-            double Z = getCurrentCamera().getZ() + camZ/10;
+            double Z = getCurrentCamera().getZ(); //+ camZ/10;
 
-//
+
 
             getCurrentCamera().setX(X);
             getCurrentCamera().setY(Y);
             getCurrentCamera().setZ(Z);
 
-            getCurrentCamera().enableLookAt();
-            //getCurrentCamera().setLookAt(0.0,0.0,0.0);
+            //getCurrentCamera().enableLookAt();
+            getCurrentCamera().setLookAt(0.0,0.0,0.0);
         }
     }
 

@@ -65,7 +65,7 @@ import java.util.Arrays;
  * Credit for camera code: https://inducesmile.com/android/android-camera2-api-example-tutorial/
  */
 
-public class ModelActivity extends AppCompatActivity {
+public class ModelActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String TAG = "ModelActivity";
     private static final int REQUEST_CAMERA_PERMISSION = 200;
@@ -103,7 +103,8 @@ public class ModelActivity extends AppCompatActivity {
     private Sensor senAccelerometer;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z,change_x, change_y,change_z;
-    private static final int SHAKE_THRESHOLD = 600;
+    private static final int SHAKE_THRESHOLD = 800;
+    private Number3d mAccVals = new Number3d();
 
     // Filenames for obj/awd files.
     // Do not include file extensions for awd files.
@@ -213,6 +214,9 @@ public class ModelActivity extends AppCompatActivity {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
 
+
+
+
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 1000) {
@@ -224,6 +228,7 @@ public class ModelActivity extends AppCompatActivity {
                 if (speed > SHAKE_THRESHOLD) {
 
                 }
+
                     change_x = last_x - x;
                     change_y = last_y - y;
                     change_z = last_z - z;
