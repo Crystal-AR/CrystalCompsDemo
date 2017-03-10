@@ -164,7 +164,7 @@ public class ModelRenderer extends RajawaliRenderer {
             getCurrentCamera().setZ(Z);
 
             //getCurrentCamera().enableLookAt();
-            getCurrentCamera().setLookAt(0.0,0.0,0.0);
+            getCurrentCamera().setLookAt(0.0, 0.0, 0.0);
         }
     }
 
