@@ -102,7 +102,7 @@ public class ModelActivity extends AppCompatActivity implements SensorEventListe
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private long lastUpdate = 0;
-    private float last_x, last_y, last_z,change_x, change_y,change_z;
+    private float last_x, last_y, last_z, change_x, change_y, change_z;
     private static final int SHAKE_THRESHOLD = 800;
     private Number3d mAccVals = new Number3d();
 
@@ -162,10 +162,10 @@ public class ModelActivity extends AppCompatActivity implements SensorEventListe
         textureView.setSurfaceTextureListener(textureListener);
 
 
-    //Setup the sensors
+        //Setup the sensors
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         textureView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -207,24 +207,17 @@ public class ModelActivity extends AppCompatActivity implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
-
-
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
-
-
-
-
+            
             long curTime = System.currentTimeMillis();
-
             if ((curTime - lastUpdate) > 1000) {
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
                 float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
-
                 if (speed > SHAKE_THRESHOLD) {
 
                 }
