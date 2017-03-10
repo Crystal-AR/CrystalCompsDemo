@@ -524,8 +524,6 @@ public class ModelActivity extends AppCompatActivity implements SensorEventListe
 
                 // Render model.
                 modelRenderer.renderModel(model, texture, modelTypeList[position]);
-                // TODO[@stensaethf]
-                // Change coordinates of where the model is displayed.
                 modelRenderer.setPosition(0.0, 0.0, 0.0);
                 //modelRenderer.setPosition((double) clickX,(double) clickY, 1.0);
 
