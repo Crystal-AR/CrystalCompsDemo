@@ -234,8 +234,11 @@ public class ModelActivity extends AppCompatActivity implements SensorEventListe
                     double angleZ = Math.atan2(y, x) / (Math.PI / 180);
 
                     //modelRenderer.setRotations(new Vector3(angleX,angleY,angleZ), new Vector3(x,y,z));
-                    modelRenderer.setRotations(new Vector3(angleX, angleY, angleZ), new Vector3(change_x, change_y, change_z)
-                    ,new Vector3(x,y,z));
+                    modelRenderer.setRotations(
+                        new Vector3(angleX, angleY, angleZ),
+                        new Vector3(change_x, change_y, change_z),
+                        new Vector3(x,y,z)
+                    );
                 }
 
         }
