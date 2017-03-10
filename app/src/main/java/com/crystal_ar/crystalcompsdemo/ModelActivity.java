@@ -8,6 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -48,6 +52,7 @@ import android.graphics.BitmapFactory;
 import com.crystal_ar.crystal_ar.CrystalAR;
 import com.crystal_ar.crystal_ar.IntPair;
 
+import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.surface.IRajawaliSurface;
 import org.rajawali3d.surface.RajawaliSurfaceView;
 
@@ -60,7 +65,7 @@ import java.util.Arrays;
  * Credit for camera code: https://inducesmile.com/android/android-camera2-api-example-tutorial/
  */
 
-public class ModelActivity extends AppCompatActivity {
+public class ModelActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String TAG = "ModelActivity";
     private static final int REQUEST_CAMERA_PERMISSION = 200;
@@ -94,6 +99,12 @@ public class ModelActivity extends AppCompatActivity {
     private Thread cornerThread;
     private TableView tableView;
 
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z, change_x, change_y, change_z;
+    private static final int SHAKE_THRESHOLD = 800;
+    private Number3d mAccVals = new Number3d();
 
     // Filenames for obj/awd files.
     // Do not include file extensions for awd files.
@@ -143,14 +154,19 @@ public class ModelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model);
         crystalAR = new CrystalAR(getApplicationContext());
-
         this.tableView = (TableView) findViewById(R.id.tableView);
         this.clickText = (TextView) findViewById(R.id.cornerOverlayText);
-
         // Setup click and surface texture listeners for texture view.
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
+
+
+        //Setup the sensors
+        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
         textureView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -183,10 +199,56 @@ public class ModelActivity extends AppCompatActivity {
 
     protected void onStop() {
         super.onStop();
+        senSensorManager.unregisterListener(this);
         cornerThread.interrupt();
         cornerThread = null;
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+            
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > 1000) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                if (speed > SHAKE_THRESHOLD) {
+
+                }
+
+                    change_x = last_x - x;
+                    change_y = last_y - y;
+                    change_z = last_z - z;
+
+                    last_x = x;
+                    last_y = y;
+                    last_z = z;
+                    double angleX = Math.atan2(-y, z) / (Math.PI / 180);
+                    double angleY = Math.atan2(-z, x) / (Math.PI / 180);
+                    double angleZ = Math.atan2(y, x) / (Math.PI / 180);
+
+                    //modelRenderer.setRotations(new Vector3(angleX,angleY,angleZ), new Vector3(x,y,z));
+                    modelRenderer.setRotations(
+                        new Vector3(angleX, angleY, angleZ),
+                        new Vector3(change_x, change_y, change_z),
+                        new Vector3(x,y,z)
+                    );
+                }
+
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
     // Setup surface texture listener.
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -290,18 +352,18 @@ public class ModelActivity extends AppCompatActivity {
                 Image readImage = reader.acquireLatestImage();
 
                 // Only find corners if we are done processing the frame we're currently at.
-                if(photo == null || photo.isRecycled()) {
-                    ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
-                    buffer.rewind();
-                    byte[] jpegByteData = new byte[buffer.capacity()];
-                    buffer.get(jpegByteData);
-                    photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
-
-                    // Find corners using a handler.
-                    if (photo != null) {
-                        initiateCornerHandler();
-                    }
-                }
+//                if(photo == null || photo.isRecycled()) {
+//                    ByteBuffer buffer = readImage.getPlanes()[0].getBuffer();
+//                    buffer.rewind();
+//                    byte[] jpegByteData = new byte[buffer.capacity()];
+//                    buffer.get(jpegByteData);
+//                    photo = BitmapFactory.decodeByteArray(jpegByteData, 0, jpegByteData.length, null);
+//
+//                    // Find corners using a handler.
+//                    if (photo != null) {
+//                        initiateCornerHandler();
+//                    }
+//                }
 
                 // Close image when done.
                 readImage.close();
@@ -403,6 +465,7 @@ public class ModelActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         startBackgroundThread();
         if (textureView.isAvailable()) {
             openCamera();
@@ -417,6 +480,7 @@ public class ModelActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+        senSensorManager.unregisterListener(this);
     }
 
     // startBackgroundThread().
@@ -460,9 +524,8 @@ public class ModelActivity extends AppCompatActivity {
 
                 // Render model.
                 modelRenderer.renderModel(model, texture, modelTypeList[position]);
-                // TODO[@stensaethf]
-                // Change coordinates of where the model is displayed.
-                modelRenderer.setPosition(1.0, 1.0, 1.0);
+                modelRenderer.setPosition(0.0, 0.0, 0.0);
+                //modelRenderer.setPosition((double) clickX,(double) clickY, 1.0);
 
                 // Swap views.
                 swapViews();

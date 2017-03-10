@@ -1,9 +1,14 @@
 package com.crystal_ar.crystalcompsdemo;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import org.rajawali3d.Camera;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderAWD;
@@ -17,6 +22,9 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.RajawaliRenderer;
 
 import java.security.InvalidParameterException;
+import java.util.Vector;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Frederik on 2/16/17.
@@ -26,6 +34,7 @@ public class ModelRenderer extends RajawaliRenderer {
 
     private DirectionalLight directionalLight;
     private Object3D model;
+    private double rotX, rotY, rotZ, camX, camY, camZ;
 
     public ModelRenderer(Context context) {
         super(context);
@@ -36,7 +45,28 @@ public class ModelRenderer extends RajawaliRenderer {
         directionalLight = new DirectionalLight(1f, .2f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
-        getCurrentCamera().setZ(15f);
+        getCurrentCamera().setZ(5f);
+        //getCurrentCamera().setPosition(0, 0, 0);
+
+
+    }
+
+    public void setRotations(Vector3 angles, Vector3 trans, Vector3 actual){
+        this.rotX = angles.x;
+        this.rotY = angles.y;
+        this.rotZ = angles.z;
+        this.camX = trans.x;
+        this.camY = trans.y;
+        this.camZ = trans.z;
+//        this.camX = actual.x;
+//        this.camY = actual.y;
+//        this.camZ = actual.z;
+
+//        Log.e("ROTATION x" , String.valueOf(rotX));
+//        Log.e("ROT  Y" , String.valueOf(rotY));
+//        Log.e("ROT  Z" , String.valueOf(rotZ));
+
+
     }
 
     public void renderModel(Integer modelID, Integer texture, String type) {
@@ -89,12 +119,11 @@ public class ModelRenderer extends RajawaliRenderer {
         getCurrentScene().addChild(model);
     }
 
+
+
     public void setPosition(Double x, Double y, Double z) {
         // These are coordinates for the virtual world.
         model.setPosition(x, y, z);
-
-//        // These are coordinates for the "real" world.
-//        model.setScreenCoordinates(1.0, 1.0, getViewportWidth(), getViewportHeight(), 1.0);
     }
 
     @Override
@@ -102,7 +131,40 @@ public class ModelRenderer extends RajawaliRenderer {
         super.onRender(elapsedTime, deltaTime);
         // Rotate object.
         if (model != null) {
-            model.rotate(Vector3.Axis.Y, 1.0);
+            //model.rotate(Vector3.Axis.X, -Math.toRadians(rotX));
+            //model.rotate(Vector3.Axis.Y, -Math.toRadians(rotY));
+            //model.rotate(Vector3.Axis.Z, -Math.toRadians(rotZ));
+
+            Log.e("COODINATE X" , String.valueOf(getCurrentCamera().getX()));
+            Log.e("COODINATE  Y" , String.valueOf(getCurrentCamera().getY()));
+            Log.e("COODINATE  Z" , String.valueOf(getCurrentCamera().getZ()));
+
+//            pos.rotateX(Math.toRadians(rotX));
+//            pos.rotateY(Math.toRadians(rotY));
+//            pos.rotateZ(Math.toRadians(rotZ));
+
+//            getCurrentCamera().setZ(pos.z);
+//            getCurrentCamera().setX(pos.x);
+//            getCurrentCamera().setY(pos.y);
+//
+
+//            model.setRotX(Math.toRadians(rotX));
+//            model.setRotY(Math.toRadians(rotY));
+//            model.setRotZ(Math.toRadians(rotZ));
+
+
+            double X = getCurrentCamera().getX() + camX/10;
+            double Y = getCurrentCamera().getY() + camY/10;
+            double Z = getCurrentCamera().getZ(); //+ camZ/10;
+
+
+
+            getCurrentCamera().setX(X);
+            getCurrentCamera().setY(Y);
+            getCurrentCamera().setZ(Z);
+
+            //getCurrentCamera().enableLookAt();
+            getCurrentCamera().setLookAt(0.0, 0.0, 0.0);
         }
     }
 
