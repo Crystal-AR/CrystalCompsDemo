@@ -15,7 +15,7 @@
 
     <ImageView
         android:id="@+id/textImageView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:adjustViewBounds="true" />
@@ -38,7 +38,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_weight="0.43"
+                android:layout_weight="0.5"
                 android:buttonTint="#FFFFFF"
                 android:onClick="onCheckboxClicked"
                 android:text="Replace w/ Img  "
@@ -50,6 +50,7 @@
             <CheckBox
                 android:id="@+id/urlCheckBox"
                 android:layout_width="wrap_content"
+                android:layout_weight="0.5"
                 android:layout_height="wrap_content"
                 android:buttonTint="#FFFFFF"
                 android:onClick="onCheckboxClicked"
@@ -71,7 +72,7 @@
                 android:id="@+id/phoneNumberCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.15"
+                android:layout_weight="0.5"
                 android:buttonTint="#FFFFFF"
                 android:onClick="onCheckboxClicked"
                 android:text="Phone Numbers"
@@ -94,31 +95,36 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/BtnTakePhoto"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="#8000"
-                android:text="Take Photo"
-                android:textColor="#FFF"
-                android:textSize="18dp" />
+            <!--<Button-->
+                <!--android:id="@+id/BtnTakePhoto"-->
+                <!--android:enabled="false"-->
+                <!--android:layout_width="140dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:background="#8000"-->
+                <!--android:text="Take Photo"-->
+                <!--android:textColor="#FFF"-->
+                <!--android:textSize="18dp" />-->
 
             <Button
                 android:id="@+id/BtnLoadPhoto"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_marginLeft="40dp"
                 android:background="#8000"
                 android:text="Load Photo"
                 android:textColor="#FFF"
                 android:textSize="18dp" />
-        </LinearLayout>
+
+
+        </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

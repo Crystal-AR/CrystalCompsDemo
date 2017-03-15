@@ -3,6 +3,7 @@ package com.crystal_ar.crystalcompsdemo;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,12 +18,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Range;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -54,6 +57,10 @@ public class TextActivity extends AppCompatActivity {
     Boolean replaceImageChecked = false;
     Boolean emailChecked = false;
 
+    Boolean imageSet = false;
+    Boolean imageTapped = false;
+    Boolean firstLoad = true;
+
     float origBitmapWidth;
     float origBitmapHeight;
     float scaledBitmapWidth;
@@ -83,27 +90,8 @@ public class TextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
 
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inMutable = true;
-        photo = BitmapFactory.decodeResource(getResources(), R.drawable.everything, opt);
-        origBitmapHeight = photo.getHeight();
-        origBitmapWidth = photo.getWidth();
 
         imageView = (ImageView) this.findViewById(R.id.textImageView);
-        //imageView.setImageBitmap(photo);
-
-
-
-//        imageView.getLayoutParams().width = Math.round(scaledBitmapWidth);
-//        imageView.setMaxHeight(Math.round(scaledBitmapHeight));
-//            imageView.setMaxHeight(Math.round(scaledBitmapHeight));
-
-
-
-
-
-//        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-
         emailCheckBox = (CheckBox) findViewById(R.id.emailCheckBox);
         urlCheckBox = (CheckBox) findViewById(R.id.urlCheckBox);
         phoneNumbersCheckBox = (CheckBox) findViewById(R.id.phoneNumberCheckBox);
@@ -112,15 +100,16 @@ public class TextActivity extends AppCompatActivity {
         crystalAR = new CrystalAR(context);
         crystalAR.setLanguage("eng");
 
-        Button takePhotoButton = (Button) this.findViewById(R.id.BtnTakePhoto);
-        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
+        // TODO: Add camera feature
+//        Button takePhotoButton = (Button) this.findViewById(R.id.BtnTakePhoto);
+//        takePhotoButton.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+//            }
+//        });
 
         Button loadPhotoButton = (Button) this.findViewById(R.id.BtnLoadPhoto);
         loadPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -185,28 +174,56 @@ public class TextActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            //photo = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(photo);
-            origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
-            Log.d("up here", String.valueOf(origBitmapAspectRatio));
+
+          // TODO: Handle Camera
+
+//            BitmapFactory.Options opt = new BitmapFactory.Options();
+//            opt.inMutable = true;
+//
+//            photo = (Bitmap) data.getExtras().get("data");
+//
+//            Bitmap copiedPhoto = photo.copy(Bitmap.Config.ARGB_8888, true);
+//
+//            origBitmapHeight = photo.getHeight();
+//            origBitmapWidth = photo.getWidth();
+//
+//            origBitmapAspectRatio = origBitmapHeight/origBitmapWidth;
+//
+//            Log.d("Width", String.valueOf(imageView.getWidth()));
+//            Log.d("Height", String.valueOf(imageView.getHeight()));
+//
+//            scaledBitmapWidth= imageView.getWidth();
+//            scaledBitmapHeight = imageView.getHeight();
+//            Log.d("imageview height", String.valueOf(imageView.getHeight()));
+//            scaleFactor = origBitmapHeight / scaledBitmapHeight;
+//
+//            imageView.setImageBitmap(copiedPhoto);
+//            crystalAR.processImage(copiedPhoto);
+//
+//            Word[] w = crystalAR.getWords();
+//            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
 
 
 
-            scaledBitmapWidth= imageView.getWidth();
-            scaledBitmapHeight = imageView.getHeight();
-            scaleFactor = origBitmapHeight / scaledBitmapHeight;
-
-            //photo = (Bitmap) data.getExtras().get("data");
-
-            imageView.setImageBitmap(photo);
-
-            crystalAR.processImage(photo);
-
-            Word[] w = crystalAR.getWords();
-            tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
         }
 
          else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
+
+            if (firstLoad == true) {
+                AlertDialog alertDialog = new AlertDialog.Builder(TextActivity.this).create();
+                alertDialog.setTitle("Please Refresh Image");
+                alertDialog.setMessage("Please load a new photo");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                firstLoad = false;
+            }
+
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -217,9 +234,54 @@ public class TextActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inMutable = true;
+
+            photo = BitmapFactory.decodeFile(picturePath, opt);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            imageView.invalidate();
+
+            origBitmapHeight = photo.getHeight();
+            origBitmapWidth = photo.getWidth();
+
+            origBitmapAspectRatio = origBitmapHeight / origBitmapWidth;
+
+            scaledBitmapWidth = imageView.getWidth();
+            scaledBitmapHeight = imageView.getHeight();
+            scaleFactor = origBitmapHeight / scaledBitmapHeight;
+
+            imageView.setImageBitmap(photo);
+            crystalAR.processImage(photo);
+
+            Word[] w = crystalAR.getWords();
+
+            resetCheckboxes();
+
             tempPhoto = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight());
+
+
+            imageTapped = false;
+            imageSet = true;
+
+            if (firstLoad){
+                reloadImage();
+            }
         }
+    }
+
+    public void reloadImage(){
+        imageView.invalidate();
+    }
+
+    public void resetCheckboxes(){
+        emailCheckBox.setChecked(false);
+        emailChecked = false;
+        phoneNumbersCheckBox.setChecked(false);
+        phoneChecked = false;
+        urlCheckBox.setChecked(false);
+        urlChecked = false;
     }
 
     public void onCheckboxClicked(View view) {
@@ -251,85 +313,100 @@ public class TextActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        float x = event.getX();
-        float y = event.getY();
-        float xRelativeDiff = imageView.getLeft();
-        float yRelativeDiff = imageView.getTop();
-
-        imageView.setBackgroundColor(Color.GREEN);
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                float top = imageView.getTop();
-                float left = imageView.getLeft();
-
-                if(emails != null) {
-                    for (int i = 0; i < emails.size(); i++) {
-                        float leftUrlX = emails.get(i).x/scaleFactor;
-                        float rightUrlX = emails.get(i).x /scaleFactor + emails.get(i).width/scaleFactor;
-                        float topUrlY = emails.get(i).y/scaleFactor+top;
-                        float bottomUrlY = emails.get(i).y/scaleFactor + emails.get(i).height+top;
-
-
-                        //Check if the x and y position of the touch is inside the bitmap
-                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
-                            Intent intent = new Intent(Intent.ACTION_SENDTO);
-                            intent.setType("text/plain");
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
-                            intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
-                            intent.setData(Uri.parse("mailto:" + Uri.parse(emails.get(i).str)));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+        if (imageTapped) {
+            AlertDialog alertDialog = new AlertDialog.Builder(TextActivity.this).create();
+            alertDialog.setTitle("Please Refresh Image");
+            alertDialog.setMessage("Please load a new photo");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
+                    });
+            alertDialog.show();
+        }
 
-                    }
-                }
-                if(urls!= null) {
-                    for (int i = 0; i < urls.size(); i++) {
-                        Log.d("Scale factor", String.valueOf(scaleFactor));
-                        float leftUrlX = urls.get(i).x/scaleFactor+left;
-                        float rightUrlX = urls.get(i).x /scaleFactor + urls.get(i).width/scaleFactor+left;
-                        float topUrlY = urls.get(i).y/scaleFactor+top + top;
-                        float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top+top;
+        if (imageSet){
+            float x = event.getX();
+            float y = event.getY();
 
-                        if(!urls.get(i).str.substring(0,3).equals("ht")) {
-                            Rect r = new Rect(urls.get(i).x, urls.get(i).y, urls.get(i).width, urls.get(i).height);
-                            String str = "http://" + urls.get(i).str;
-                            Word w = new Word(str, r);
-                            urls.set(i, w);
-                        }
+            imageView.setBackgroundColor(Color.GREEN);
 
-                        //Check if the x and y position of the touch is inside the bitmap
-                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
-                            Log.d(" url ", urls.get(i).str);
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(i).str));
-                            startActivity(browserIntent);
-                        }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    float top = imageView.getTop();
+                    float left = imageView.getLeft();
 
-                    }
-                }
-                if(phoneNumbers != null) {
-                    for (int i = 0; i < phoneNumbers.size(); i++) {
-                        float leftUrlX = phoneNumbers.get(i).x/scaleFactor;
-                        float rightUrlX = phoneNumbers.get(i).x /scaleFactor + phoneNumbers.get(i).width/scaleFactor;
-                        float topUrlY = phoneNumbers.get(i).y/scaleFactor+top;
-                        float bottomUrlY = phoneNumbers.get(i).y/scaleFactor + phoneNumbers.get(i).height+top;
+                    if(emails != null) {
+                        for (int i = 0; i < emails.size(); i++) {
+                            float leftUrlX = emails.get(i).x/scaleFactor;
+                            float rightUrlX = emails.get(i).x/scaleFactor + emails.get(i).width/scaleFactor;
+                            float topUrlY = emails.get(i).y/scaleFactor+top+top;
+                            float bottomUrlY = emails.get(i).y/scaleFactor + emails.get(i).height+top+top;
 
-                        //Check if the x and y position of the touch is inside the bitmap
-                        if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
-                            Intent intent = new Intent(Intent.ACTION_CALL);
-                            intent.setData(Uri.parse("tel:" + phoneNumbers.get(i).str));
-                            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                //TODO[@abha, @josh, @simon] -- Ask the user for permission here.
+
+                            //Check if the x and y position of the touch is inside the bitmap
+                            if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
+                                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
+                                intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
+                                intent.setData(Uri.parse("mailto:" + Uri.parse(emails.get(i).str)));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                imageTapped = true;
+                                startActivity(intent);
                             }
-                            startActivity(intent);
+
                         }
-
                     }
-                }
+                    if(urls!= null) {
+                        for (int i = 0; i < urls.size(); i++) {
+                            float leftUrlX = urls.get(i).x/scaleFactor+left;
+                            float rightUrlX = urls.get(i).x/scaleFactor + urls.get(i).width/scaleFactor+left;
+                            float topUrlY = urls.get(i).y/scaleFactor+top+92;
+                            float bottomUrlY = urls.get(i).y/scaleFactor + urls.get(i).height+top+92;
 
 
-                return true;
+                            if(!urls.get(i).str.substring(0,3).equals("ht")) {
+                                Rect r = new Rect(urls.get(i).x, urls.get(i).y, urls.get(i).width, urls.get(i).height);
+                                String str = "http://" + urls.get(i).str;
+                                Word w = new Word(str, r);
+                                urls.set(i, w);
+                            }
+
+                            //Check if the x and y position of the touch is inside the bitmap
+                            if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(i).str));
+                                imageTapped = true;
+                                startActivity(browserIntent);
+                            }
+
+                        }
+                    }
+                    if(phoneNumbers != null) {
+                        for (int i = 0; i < phoneNumbers.size(); i++) {
+                            float leftUrlX = phoneNumbers.get(i).x/scaleFactor;
+                            float rightUrlX = phoneNumbers.get(i).x /scaleFactor + phoneNumbers.get(i).width/scaleFactor;
+                            float topUrlY = phoneNumbers.get(i).y/scaleFactor+top;
+                            float bottomUrlY = phoneNumbers.get(i).y/scaleFactor + phoneNumbers.get(i).height+top;
+
+                            //Check if the x and y position of the touch is inside the bitmap
+                            if ((x  > leftUrlX) && (x  < rightUrlX) && (y < bottomUrlY) && (y  > topUrlY)) {
+                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" + phoneNumbers.get(i).str));
+                                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                    //TODO[@abha, @josh, @simon] -- Ask the user for permission here.
+                                }
+                                imageTapped = true;
+                                startActivity(intent);
+                            }
+
+                        }
+                    }
+
+
+                    return true;
+            }
         }
 
         return false;
@@ -394,7 +471,6 @@ public class TextActivity extends AppCompatActivity {
     }
 
     protected void replaceWithImg() {
-        Log.d("Replace", "got here");
         String[] replace = {"Email", "Contact"};
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.email);//assign your bitmap;
         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.phone);//assign your bitmap;
